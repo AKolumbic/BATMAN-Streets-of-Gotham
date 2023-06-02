@@ -1,3 +1,4 @@
-import Demo from "./Demo";
+import Demo from './Demo';
+import GameMenu from './GameMenu';
 
-export { Demo };
+export { Demo, GameMenu };
