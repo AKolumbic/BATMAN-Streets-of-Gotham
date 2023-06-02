@@ -1,8 +1,8 @@
 # BATMAN: STREETS OF GOTHAM
 
-Begin the experience as the Dark Knight of Gotham on our Batman platformer. This project was quick-started using a template that combines Phaser 3.60 with [TypeScript 5](https://www.typescriptlang.org/) and uses [Rollup](https://rollupjs.org) for bundling and heavily reuses code from https://github.com/udykas/batman-hackathon.
+Begin the experience as the Dark Knight of Gotham on this Batman platformer. This game was quick-started using a template that combines Phaser 3.60 with [TypeScript 5](https://www.typescriptlang.org/) and uses [Rollup](https://rollupjs.org) for bundling and heavily reuses code from [this hackathon project](https://github.com/udykas/batman-hackathon) as a starting point.
 
-### A special thank you to Alex Dykas, Thuy Pham, Brandon Benefield, and Brandon Hopper for their work on the original batman-hackathon project.
+### A special thank you to Alex Dykas, Thuy Pham, Brandon Benefield, and Brandon Hopper for their work in Lambda School's 2018 Summer Hackathon. [Instagram Story from the Hackathon](https://www.instagram.com/p/CiympKMD-K4/)
 
 ## Controls:
 
