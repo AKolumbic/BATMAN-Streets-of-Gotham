@@ -1,9 +1,10 @@
 {
-    "compilerOptions": {
-        "target": "es5",
-        "moduleResolution": "node"
-    },
-    "include": [
-        "./src/**/*"
-    ]
+  "compilerOptions": {
+    "target": "es5",
+    "moduleResolution": "node"
+  },
+  "include": ["./src/**/*"],
+  "lib": ["es6", "dom", "dom.iterable", "scripthost"],
+  "typeRoots": ["./node_modules/phaser/types"],
+  "types": ["Phaser"]
 }

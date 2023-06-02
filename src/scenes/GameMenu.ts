@@ -1,14 +1,10 @@
-// const { Scene } = Phaser;
 import { Scene } from 'phaser';
 
 const originalColor = 'rgba(0, 0, 0)';
 const alternateColor = 'rgb(255, 204, 0)';
 let isOriginalFontColor = true;
-// let currentColor = originalColor;
-// let button;
 let camera;
 let cursors;
-// let playBtn;
 let playBtnText;
 
 export default class GameMenu extends Scene {
@@ -17,12 +13,12 @@ export default class GameMenu extends Scene {
   }
 
   preload() {
-    this.load.image('gameMenu', '../assets/imgs/menuimage.jpg');
-    this.load.image('playBtnBg', '../assets/imgs/play_button_bg.png');
+    this.load.image('gameMenu', '/assets/imgs/menuimage.jpg');
+    this.load.image('playBtnBg', '/assets/imgs/play_button_bg.png');
 
     this.load.audio('gameMenuMusic', [
-      '../assets/audio/introMusic.mp3',
-      '../assets/audio/introMusic.ogg',
+      '/assets/audio/introMusic.mp3',
+      '/assets/audio/introMusic.ogg',
     ]);
   }
 
@@ -54,6 +50,8 @@ export default class GameMenu extends Scene {
     playBtn.on('pointerdown', (e) => {
       // TODO: implement MainGameScene
       //   this.scene.start("MainGameScene");
+      // TODO: Remove Demo
+      this.scene.start('Demo');
       music.stop();
     });
 
@@ -61,6 +59,8 @@ export default class GameMenu extends Scene {
     playBtnText.on('pointerdown', (e) => {
       // TODO: implement MainGameScene
       //   this.scene.start("MainGameScene");
+      // TODO: Remove Demo
+      this.scene.start('Demo');
       music.stop();
     });
 

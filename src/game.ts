@@ -1,5 +1,5 @@
 import { AUTO, Game } from 'phaser';
-import { Demo } from './scenes';
+import { GameMenu } from './scenes';
 
 const config = {
   type: AUTO,
@@ -13,7 +13,7 @@ const config = {
       debug: false,
     },
   },
-  scene: Demo,
+  scene: GameMenu,
 };
 
 const game = new Game(config);
