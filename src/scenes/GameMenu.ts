@@ -38,7 +38,7 @@ export default class GameMenu extends Scene {
 
     // Intro Music
     const music = this.sound.add('gameMenuMusic');
-    music.play({ volume: 1, loop: true });
+    music.play({ volume: 0.5, loop: true });
 
     // Background Image
     this.add.sprite(400, 591, 'gameMenu');
@@ -62,20 +62,14 @@ export default class GameMenu extends Scene {
       .setInteractive();
 
     // startButton settings
-    startButton.on('pointerdown', (e) => {
-      // TODO: implement MainGameScene
-      //   this.scene.start("MainGameScene");
-      // TODO: Remove Demo
-      this.scene.start('demo');
+    startButton.on('pointerdown', () => {
+      this.scene.start('LevelOne');
       music.stop();
     });
 
     // startButtonText settings
-    startButtonText.on('pointerdown', (e) => {
-      // TODO: implement MainGameScene
-      //   this.scene.start("MainGameScene");
-      // TODO: Remove Demo
-      this.scene.start('demo');
+    startButtonText.on('pointerdown', () => {
+      this.scene.start('LevelOne');
       music.stop();
     });
 

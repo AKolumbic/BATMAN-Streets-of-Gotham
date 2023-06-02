@@ -1,11 +1,15 @@
 import { AUTO, Types, Game, Scale } from 'phaser';
 import scenes from './scenes';
 
+const canvas = document.createElement('canvas');
+canvas.toDataURL('https://images.alphacoders.com/115/1156096.png');
+
 const config = {
   type: AUTO,
   title: 'Batman: Streets of Gotham',
-  backgroundColor: '#125555',
+  backgroundColor: '#192424',
   autoFocus: true,
+  // canvas,
   width: 800,
   height: 600,
   physics: {
