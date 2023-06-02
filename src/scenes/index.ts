@@ -1,4 +1,8 @@
-import Demo from './Demo';
 import GameMenu from './GameMenu';
+import Demo from './Demo';
 
-export { Demo, GameMenu };
+/**
+ * Game Menu needs to be exported first so it can
+ * be the game's starting scene.
+ */
+export default [GameMenu, Demo];
