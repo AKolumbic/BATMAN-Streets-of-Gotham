@@ -6,7 +6,7 @@ export function getSceneAssets(load: Phaser.Loader.LoaderPlugin) {
   load.image('platform', './assets/imgs/sml-platform.png');
   load.image('batarang', './assets/imgs/batarang.png');
   load.spritesheet('stand', './assets/imgs/stand.png', {
-    frameWidth: 41,
+    frameWidth: 41.4,
     frameHeight: 53,
   });
   load.spritesheet('run-left', './assets/imgs/run-left.png', {

@@ -241545,7 +241545,6 @@
   var __webpack_exports__Game = __webpack_exports__.lA;
   var __webpack_exports__Geom = __webpack_exports__.v6;
   var __webpack_exports__Input = __webpack_exports__.II;
-  var __webpack_exports__Scale = __webpack_exports__.Ci;
   var __webpack_exports__Scene = __webpack_exports__.xs;
 
   /******************************************************************************
@@ -241706,10 +241705,10 @@
           frameRate: 4,
           repeat: -1,
       });
-      // Crouch — 4 frames (240px / 60px = 4), play once and hold last frame
+      // Crouch — 4 frames (240px / 60px = 4), reversed so it animates DOWN, hold last frame
       anims.create({
           key: 'crouch',
-          frames: anims.generateFrameNumbers('crouch', { start: 0, end: 3 }),
+          frames: anims.generateFrameNumbers('crouch', { start: 3, end: 0 }),
           frameRate: 8,
           repeat: 0,
       });
@@ -241770,7 +241769,7 @@
       load.image('platform', './assets/imgs/sml-platform.png');
       load.image('batarang', './assets/imgs/batarang.png');
       load.spritesheet('stand', './assets/imgs/stand.png', {
-          frameWidth: 41,
+          frameWidth: 41.4,
           frameHeight: 53,
       });
       load.spritesheet('run-left', './assets/imgs/run-left.png', {
@@ -242473,14 +242472,12 @@
    */
   var scenes = [GameMenu, LevelOne];
 
-  var canvas = document.createElement('canvas');
-  canvas.toDataURL('https://images.alphacoders.com/115/1156096.png');
   var config = {
       type: __webpack_exports__AUTO,
+      parent: 'game-container',
       title: 'Batman: Streets of Gotham',
       backgroundColor: '#192424',
       autoFocus: true,
-      // canvas,
       width: 800,
       height: 600,
       physics: {
@@ -242491,9 +242488,6 @@
           },
       },
       scene: scenes,
-      scale: {
-          autoCenter: __webpack_exports__Scale.Center.CENTER_BOTH,
-      },
   };
   new __webpack_exports__Game(config);
 
