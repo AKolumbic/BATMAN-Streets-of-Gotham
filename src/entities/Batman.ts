@@ -26,6 +26,8 @@ export default class Batman {
   public score = 0;
 
   private scene: Phaser.Scene;
+  private prevState: BatmanState = BatmanState.IDLE;
+  private prevFacing = true;
   private invulnerabilityTimer: Phaser.Time.TimerEvent | null = null;
   private flickerTimer: Phaser.Time.TimerEvent | null = null;
 
@@ -73,7 +75,8 @@ export default class Batman {
       this.state = BatmanState.FALLING;
     }
     if (
-      (this.state === BatmanState.FALLING || this.state === BatmanState.JUMPING) &&
+      (this.state === BatmanState.FALLING ||
+        this.state === BatmanState.JUMPING) &&
       onGround
     ) {
       this.state = BatmanState.IDLE;
@@ -82,7 +85,6 @@ export default class Batman {
     // Punching locks out other actions until animation completes
     if (this.state === BatmanState.PUNCHING) {
       this.sprite.setVelocityX(0);
-      // Animation is already playing; wait for ANIMATION_COMPLETE
       return;
     }
 
@@ -90,26 +92,29 @@ export default class Batman {
 
     const leftDown = cursors.left.isDown || keys.A.isDown;
     const rightDown = cursors.right.isDown || keys.D.isDown;
-    const jumpDown = cursors.up.isDown || cursors.space.isDown || keys.W.isDown;
+    const jumpDown =
+      cursors.up.isDown || cursors.space.isDown || keys.W.isDown;
     const crouchDown = cursors.down.isDown || keys.S.isDown;
     const punchDown = keys.ONE.isDown;
 
-    // Punch (only when grounded — PUNCHING state already returned above)
+    // Punch
     if (punchDown && onGround) {
       this.state = BatmanState.PUNCHING;
       this.sprite.setVelocityX(0);
       const punchAnim = this.facingRight ? 'punch' : 'punch-left';
       this.sprite.play(punchAnim);
+      this.prevState = BatmanState.PUNCHING;
+      this.prevFacing = this.facingRight;
       return;
     }
 
-    // Jump (only when grounded)
+    // Jump
     if (jumpDown && onGround) {
       this.state = BatmanState.JUMPING;
       this.sprite.setVelocityY(Batman.JUMP_VELOCITY);
     }
 
-    // Horizontal movement (allowed during all states except punching)
+    // Horizontal movement
     if (leftDown) {
       this.sprite.setVelocityX(-Batman.MOVE_SPEED);
       this.facingRight = false;
@@ -124,11 +129,7 @@ export default class Batman {
       }
     } else if (onGround) {
       this.sprite.setVelocityX(0);
-      if (
-        this.state !== BatmanState.JUMPING &&
-        this.state !== BatmanState.CROUCHING
-      ) {
-        // Crouch
+      if (this.state !== BatmanState.JUMPING) {
         if (crouchDown) {
           this.state = BatmanState.CROUCHING;
         } else {
@@ -137,46 +138,35 @@ export default class Batman {
       }
     }
 
-    // Release crouch
-    if (this.state === BatmanState.CROUCHING && !crouchDown) {
-      this.state = BatmanState.IDLE;
-    }
-
     // --- Animation selection ---
     this.playAnimation();
   }
 
   private playAnimation(): void {
-    const currentKey = this.sprite.anims.currentAnim?.key;
+    // Only change animation when state or facing changes
+    const stateChanged = this.state !== this.prevState;
+    const facingChanged = this.facingRight !== this.prevFacing;
+
+    if (!stateChanged && !facingChanged) return;
+
+    this.prevState = this.state;
+    this.prevFacing = this.facingRight;
 
     switch (this.state) {
       case BatmanState.IDLE:
-        if (currentKey !== 'stand') {
-          this.sprite.play('stand');
-        }
+        this.sprite.play('stand');
         break;
       case BatmanState.RUNNING:
-        if (this.facingRight) {
-          this.sprite.play('right', true);
-        } else {
-          this.sprite.play('left', true);
-        }
+        this.sprite.play(this.facingRight ? 'right' : 'left');
         break;
       case BatmanState.JUMPING:
       case BatmanState.FALLING:
-        if (this.facingRight) {
-          this.sprite.play('up', true);
-        } else {
-          this.sprite.play('up-left', true);
-        }
+        this.sprite.play(this.facingRight ? 'up' : 'up-left');
         break;
       case BatmanState.CROUCHING:
-        // Play once and hold last frame — check by key to prevent restart loop
-        if (currentKey !== 'crouch') {
-          this.sprite.play('crouch');
-        }
+        this.sprite.play('crouch');
         break;
-      // PUNCHING animation is triggered directly in update(), not here
+      // PUNCHING is triggered directly in update()
     }
   }
 
@@ -191,6 +181,7 @@ export default class Batman {
     this.sprite.setVelocityX(Batman.KNOCKBACK_X * knockbackDir);
     this.sprite.setVelocityY(Batman.KNOCKBACK_Y);
     this.state = BatmanState.FALLING;
+    this.prevState = BatmanState.FALLING;
 
     // Flicker effect during i-frames
     this.flickerTimer = this.scene.time.addEvent({

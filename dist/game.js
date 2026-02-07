@@ -241705,11 +241705,11 @@
           frameRate: 4,
           repeat: -1,
       });
-      // Crouch — 4 frames (240px / 60px = 4), reversed so it animates DOWN, hold last frame
+      // Crouch — 4 frames (240px / 60px = 4), play once and hold last frame
       anims.create({
           key: 'crouch',
-          frames: anims.generateFrameNumbers('crouch', { start: 3, end: 0 }),
-          frameRate: 8,
+          frames: anims.generateFrameNumbers('crouch', { start: 0, end: 3 }),
+          frameRate: 10,
           repeat: 0,
       });
       // Punch right — 11 frames (572px / 52px = 11), play once
@@ -241877,6 +241877,8 @@
           this.facingRight = true;
           this.isInvulnerable = false;
           this.score = 0;
+          this.prevState = BatmanState.IDLE;
+          this.prevFacing = true;
           this.invulnerabilityTimer = null;
           this.flickerTimer = null;
           this.scene = config.scene;
@@ -241903,14 +241905,14 @@
           if (this.state === BatmanState.JUMPING && this.sprite.body.velocity.y > 0) {
               this.state = BatmanState.FALLING;
           }
-          if ((this.state === BatmanState.FALLING || this.state === BatmanState.JUMPING) &&
+          if ((this.state === BatmanState.FALLING ||
+              this.state === BatmanState.JUMPING) &&
               onGround) {
               this.state = BatmanState.IDLE;
           }
           // Punching locks out other actions until animation completes
           if (this.state === BatmanState.PUNCHING) {
               this.sprite.setVelocityX(0);
-              // Animation is already playing; wait for ANIMATION_COMPLETE
               return;
           }
           // --- Input handling ---
@@ -241919,20 +241921,22 @@
           var jumpDown = cursors.up.isDown || cursors.space.isDown || keys.W.isDown;
           var crouchDown = cursors.down.isDown || keys.S.isDown;
           var punchDown = keys.ONE.isDown;
-          // Punch (only when grounded — PUNCHING state already returned above)
+          // Punch
           if (punchDown && onGround) {
               this.state = BatmanState.PUNCHING;
               this.sprite.setVelocityX(0);
               var punchAnim = this.facingRight ? 'punch' : 'punch-left';
               this.sprite.play(punchAnim);
+              this.prevState = BatmanState.PUNCHING;
+              this.prevFacing = this.facingRight;
               return;
           }
-          // Jump (only when grounded)
+          // Jump
           if (jumpDown && onGround) {
               this.state = BatmanState.JUMPING;
               this.sprite.setVelocityY(Batman.JUMP_VELOCITY);
           }
-          // Horizontal movement (allowed during all states except punching)
+          // Horizontal movement
           if (leftDown) {
               this.sprite.setVelocityX(-Batman.MOVE_SPEED);
               this.facingRight = false;
@@ -241949,9 +241953,7 @@
           }
           else if (onGround) {
               this.sprite.setVelocityX(0);
-              if (this.state !== BatmanState.JUMPING &&
-                  this.state !== BatmanState.CROUCHING) {
-                  // Crouch
+              if (this.state !== BatmanState.JUMPING) {
                   if (crouchDown) {
                       this.state = BatmanState.CROUCHING;
                   }
@@ -241960,46 +241962,32 @@
                   }
               }
           }
-          // Release crouch
-          if (this.state === BatmanState.CROUCHING && !crouchDown) {
-              this.state = BatmanState.IDLE;
-          }
           // --- Animation selection ---
           this.playAnimation();
       };
       Batman.prototype.playAnimation = function () {
-          var _a;
-          var currentKey = (_a = this.sprite.anims.currentAnim) === null || _a === void 0 ? void 0 : _a.key;
+          // Only change animation when state or facing changes
+          var stateChanged = this.state !== this.prevState;
+          var facingChanged = this.facingRight !== this.prevFacing;
+          if (!stateChanged && !facingChanged)
+              return;
+          this.prevState = this.state;
+          this.prevFacing = this.facingRight;
           switch (this.state) {
               case BatmanState.IDLE:
-                  if (currentKey !== 'stand') {
-                      this.sprite.play('stand');
-                  }
+                  this.sprite.play('stand');
                   break;
               case BatmanState.RUNNING:
-                  if (this.facingRight) {
-                      this.sprite.play('right', true);
-                  }
-                  else {
-                      this.sprite.play('left', true);
-                  }
+                  this.sprite.play(this.facingRight ? 'right' : 'left');
                   break;
               case BatmanState.JUMPING:
               case BatmanState.FALLING:
-                  if (this.facingRight) {
-                      this.sprite.play('up', true);
-                  }
-                  else {
-                      this.sprite.play('up-left', true);
-                  }
+                  this.sprite.play(this.facingRight ? 'up' : 'up-left');
                   break;
               case BatmanState.CROUCHING:
-                  // Play once and hold last frame — check by key to prevent restart loop
-                  if (currentKey !== 'crouch') {
-                      this.sprite.play('crouch');
-                  }
+                  this.sprite.play('crouch');
                   break;
-              // PUNCHING animation is triggered directly in update(), not here
+              // PUNCHING is triggered directly in update()
           }
       };
       Batman.prototype.takeDamage = function (amount, enemyX) {
@@ -242013,6 +242001,7 @@
           this.sprite.setVelocityX(Batman.KNOCKBACK_X * knockbackDir);
           this.sprite.setVelocityY(Batman.KNOCKBACK_Y);
           this.state = BatmanState.FALLING;
+          this.prevState = BatmanState.FALLING;
           // Flicker effect during i-frames
           this.flickerTimer = this.scene.time.addEvent({
               delay: 80,

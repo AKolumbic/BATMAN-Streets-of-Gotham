@@ -50,11 +50,11 @@ export function registerAnimations(
     repeat: -1,
   });
 
-  // Crouch — 4 frames (240px / 60px = 4), reversed so it animates DOWN, hold last frame
+  // Crouch — 4 frames (240px / 60px = 4), play once and hold last frame
   anims.create({
     key: 'crouch',
-    frames: anims.generateFrameNumbers('crouch', { start: 3, end: 0 }),
-    frameRate: 8,
+    frames: anims.generateFrameNumbers('crouch', { start: 0, end: 3 }),
+    frameRate: 10,
     repeat: 0,
   });
 
