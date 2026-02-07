@@ -4,47 +4,85 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Batman: Streets of Gotham is a browser-based 2D platformer built with **Phaser 3** and **TypeScript**, bundled with **Rollup**. The player controls Batman through a side-scrolling level with platforms, jumping, and punch mechanics.
+Batman: Streets of Gotham is a browser-based 2D side-scrolling beat-em-up / platformer built with **Phaser 3** and **TypeScript**, bundled with **Vite**. Batman patrols Gotham's neighborhoods, fighting gangs and rescuing civilians.
 
 ## Build & Development Commands
 
 ```bash
 npm install          # Install dependencies (required first)
-npm run watch        # Dev server with hot reload on port 10001
-npm run dev          # One-time dev build + serve on port 10001
-npm run build        # Production build with Terser minification
+npm run dev          # Vite dev server with HMR on port 10001
+npm run build        # Production build (output to dist/)
+npm run preview      # Preview the production build
 ```
-
-The dev server auto-opens the browser and serves from `dist/` with CORS enabled.
 
 ## Architecture
 
 **Entry point:** `src/game.ts` creates the Phaser.Game instance (800x600, Arcade physics, gravity 300).
 
-**Scene flow:** `GameMenu` → `LevelOne`. Scenes are registered in `src/scenes/index.ts`.
+**Scene flow:** `Boot` -> `GameMenu` -> `LevelSelect` -> `LevelOne` -> `LevelComplete` / `GameOver`
 
-- `src/scenes/GameMenu.ts` — Main menu with animated start button and intro music. Transitions to LevelOne on click.
-- `src/scenes/1-LevelOne/LevelOne.ts` — Main gameplay scene. Creates Batman sprite with physics, camera follow, and a wide scrolling world (2822x384). Background has three parallax layers.
-- `src/scenes/1-LevelOne/LevelOne.utils.ts` — Asset preloading (spritesheets, images, audio) and platform layout creation using static physics groups. Platforms are hardcoded positionally.
-- `src/controls/controls.utils.ts` — `bindControls()` defines sprite animations (run, stand, jump, punch). `controlPlayerCharacter()` handles keyboard input (arrow keys + WASD) for movement, jumping, and (partially implemented) punching.
-- `src/scenes/Demo.ts` — Unused shader demo scene, not in the game flow.
+### Directory Structure
 
-**WASD support:** `dist/index.html` contains an inline script that remaps WASD keydown/keyup events to arrow key events, separate from the in-game controls handler.
+```
+src/
+  constants/
+    assets.ts          # Centralized asset keys + paths (all asset references)
+    physics.ts         # Gravity, speeds, hitbox sizes, HP values
+  controls/
+    controls.utils.ts  # Animation registration + input key binding
+  data/
+    levels/
+      level-01.json    # Data-driven level definition (platforms, spawns, backgrounds)
+  entities/
+    Batman.ts          # Player class with state machine, HP, punch hitbox
+    Enemy.ts           # Base enemy class (patrol, attack, damage, death)
+    NPC.ts             # Rescuable civilian NPC
+    enemies/
+      GangsterMelee.ts   # Close-range gangster (Gangsters_1/2 sprites)
+      GangsterRanged.ts  # Ranged gangster with bullets (Gangsters_3 sprites)
+  scenes/
+    Boot.ts            # Loading bar, transitions to GameMenu
+    GameMenu.ts        # Title screen with pan-down animation
+    LevelSelect.ts     # Neighborhood/level picker (8 areas)
+    1-LevelOne/
+      LevelOne.ts      # Main gameplay scene (data-driven from level-01.json)
+      LevelOne.utils.ts # Asset preloading for level one
+    LevelComplete.ts   # Victory screen with score/rescue stats
+    GameOver.ts        # Defeat screen with retry/level select
+    index.ts           # Scene registry
+  systems/
+    LevelLoader.ts       # Parse level JSON, create platforms + backgrounds
+    TilemapManager.ts    # Tiled JSON tilemap support (city tiles)
+    ParallaxBackground.ts # Multi-layer parallax scrolling
+  ui/
+    HUD.ts             # Health bar, score, rescue counter
+    Button.ts          # Reusable button component
+    DialogueBox.ts     # Text dialogue box component
+  game.ts              # Phaser.Game entry point
+```
 
-## Build Configuration
+### Asset Organization
 
-- **Rollup** bundles `src/game.ts` → `dist/game.js` as IIFE format
-- TypeScript targets ES5 with Phaser type definitions
-- Feature flags in rollup configs toggle Phaser subsystems (WebGL, Canvas, Sound, etc.)
-- Dev builds include sourcemaps; production builds are minified
+Assets live in `public/assets/` (copied to `dist/assets/` by Vite at build time).
+
+- `public/assets/imgs/` — All images and sprite sheets
+  - Root PNGs: Batman sprites, backgrounds, platforms (legacy)
+  - `gangster-pixel-character-sprite-sheets-pack/` — 3 gangster enemy types (128x128 frames)
+  - `Free-Homeless-Character-Sprite-Sheets-Pixel-Art/` — 3 homeless NPC types (128x128 frames)
+  - `free-scrolling-city-backgrounds-pixel-art/` — 8 city themes, day/night, 5 parallax layers each
+  - `GandalfHardcore City Tiles/` — 32x32 tile sets for tilemap-based levels
+  - `Game UI collection FREE version/` — Bars, buttons, dialogue boxes, icons
+- `public/assets/audio/` — Music files (MP3 + OGG)
+
+### Key Conventions
+
+- All asset paths are defined in `src/constants/assets.ts` — never hardcode paths elsewhere
+- Physics constants are in `src/constants/physics.ts`
+- Level layouts are data-driven via JSON files in `src/data/levels/`
+- Enemy subclasses extend the base `Enemy` class and override `createSprite()` and animation keys
 
 ## Code Style
 
-- ESLint + Prettier enforced: 2-space indent, single quotes, semicolons, Unix line endings (LF)
-- VSCode auto-formats on save (`.vscode/settings.json`)
-
-## Known Issues
-
-- Audio asset path typo: `'./assets/aduio/'` should be `'./assets/audio/'` in `LevelOne.utils.ts`
-- Punch mechanics and score/batarang collectible systems are partially implemented (commented out)
-- Bundled `dist/game.js` is ~7.8 MB (not minified in dev)
+- ESLint + Prettier: 2-space indent, single quotes, semicolons, Unix line endings (LF)
+- TypeScript strict mode, ESNext target, bundler module resolution
+- Functional components for UI, class-based for entities and scenes

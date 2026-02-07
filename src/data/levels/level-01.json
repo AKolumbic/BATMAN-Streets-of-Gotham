@@ -1,0 +1,103 @@
+{
+  "id": "level-01",
+  "name": "Crime Alley",
+  "episode": 1,
+  "title": "Return to Crime Alley",
+  "narration": [
+    "Every year, on the anniversary, I come back.",
+    "Crime Alley. The place where it all began.",
+    "The filth has spread deeper since last time.",
+    "New gangs. New faces. Same old darkness.",
+    "Tonight, Gotham remembers what fear tastes like."
+  ],
+  "worldWidth": 2822,
+  "worldHeight": 384,
+  "background": {
+    "theme": "legacy",
+    "layers": [
+      { "key": "starry-night", "x": 1411, "y": 185 },
+      { "key": "background", "x": 1411, "y": 310 },
+      { "key": "foreground", "x": 1411, "y": 390 }
+    ]
+  },
+  "music": "gameMusic",
+  "player": { "x": 100, "y": 450 },
+  "platforms": [
+    { "x": 300, "y": 600, "texture": "ground", "scale": 5, "label": "FLOOR" },
+    { "x": 290, "y": 450, "texture": "platform", "scale": 0.65, "label": "FIRST PLATFORMS" },
+    { "x": 390, "y": 450, "texture": "platform", "scale": 0.65 },
+    { "x": 440, "y": 450, "texture": "platform", "scale": 0.65 },
+    { "x": 550, "y": 330, "texture": "platform", "scale": 0.25, "label": "SECOND PLATFORMS" },
+    { "x": 600, "y": 330, "texture": "platform", "scale": 0.25 },
+    { "x": 650, "y": 330, "texture": "platform", "scale": 0.25 },
+    { "x": 700, "y": 330, "texture": "platform", "scale": 0.25 },
+    { "x": 750, "y": 330, "texture": "platform", "scale": 0.25 },
+    { "x": 800, "y": 330, "texture": "platform", "scale": 0.25 },
+    { "x": 850, "y": 330, "texture": "platform", "scale": 0.25 },
+    { "x": 950, "y": 450, "texture": "platform", "scale": 0.65 },
+    { "x": 1100, "y": 450, "texture": "platform", "scale": 0.65 },
+    { "x": 1080, "y": 200, "texture": "platform", "scale": 0.65 },
+    { "x": 1275, "y": 350, "texture": "platform", "scale": 0.25, "label": "THIRD PLATFORMS" },
+    { "x": 1325, "y": 350, "texture": "platform", "scale": 0.25 },
+    { "x": 1375, "y": 350, "texture": "platform", "scale": 0.25 },
+    { "x": 1475, "y": 200, "texture": "platform", "scale": 0.25 },
+    { "x": 1525, "y": 200, "texture": "platform", "scale": 0.25 },
+    { "x": 1575, "y": 200, "texture": "platform", "scale": 0.25 },
+    { "x": 1625, "y": 200, "texture": "platform", "scale": 0.25 },
+    { "x": 1450, "y": 450, "texture": "platform", "scale": 0.25, "label": "FOURTH PLATFORMS" },
+    { "x": 1500, "y": 450, "texture": "platform", "scale": 0.25 },
+    { "x": 1550, "y": 450, "texture": "platform", "scale": 0.25 },
+    { "x": 1600, "y": 450, "texture": "platform", "scale": 0.25 },
+    { "x": 1650, "y": 450, "texture": "platform", "scale": 0.25 },
+    { "x": 1700, "y": 450, "texture": "platform", "scale": 0.25 },
+    { "x": 1750, "y": 450, "texture": "platform", "scale": 0.25 },
+    { "x": 1800, "y": 450, "texture": "platform", "scale": 0.25 },
+    { "x": 1850, "y": 450, "texture": "platform", "scale": 0.25 },
+    { "x": 1900, "y": 450, "texture": "platform", "scale": 0.25 },
+    { "x": 2110, "y": 450, "texture": "platform", "scale": 0.25 },
+    { "x": 2110, "y": 330, "texture": "platform", "scale": 0.5 },
+    { "x": 2250, "y": 175, "texture": "platform", "scale": 0.25, "label": "FINAL PLATFORMS" },
+    { "x": 2300, "y": 175, "texture": "platform", "scale": 0.25 },
+    { "x": 2350, "y": 175, "texture": "platform", "scale": 0.25 },
+    { "x": 2400, "y": 175, "texture": "platform", "scale": 0.25 },
+    { "x": 2450, "y": 175, "texture": "platform", "scale": 0.25 },
+    { "x": 2500, "y": 175, "texture": "platform", "scale": 0.25 },
+    { "x": 2550, "y": 175, "texture": "platform", "scale": 0.25 },
+    { "x": 2600, "y": 175, "texture": "platform", "scale": 0.25 }
+  ],
+  "enemies": [
+    {
+      "type": "gangster-melee",
+      "x": 600,
+      "y": 450,
+      "patrolLeftBound": 450,
+      "patrolRightBound": 750
+    },
+    {
+      "type": "gangster-melee",
+      "x": 1500,
+      "y": 450,
+      "patrolLeftBound": 1400,
+      "patrolRightBound": 1700
+    },
+    {
+      "type": "gangster-melee",
+      "x": 2300,
+      "y": 100,
+      "patrolLeftBound": 2200,
+      "patrolRightBound": 2550
+    }
+  ],
+  "npcs": [
+    {
+      "type": "homeless-1",
+      "x": 850,
+      "y": 280
+    },
+    {
+      "type": "homeless-3",
+      "x": 1950,
+      "y": 400
+    }
+  ]
+}

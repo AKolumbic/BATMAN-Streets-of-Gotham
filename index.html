@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Batman: Streets of Gotham</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: #1a1a2e;
+        background-image:
+          radial-gradient(ellipse at 50% 30%, #16213e 0%, #0f0f23 70%),
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 0, 0, 0.15) 2px,
+            rgba(0, 0, 0, 0.15) 4px
+          );
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Courier New', monospace;
+        overflow: hidden;
+      }
+
+      /* --- Arcade Cabinet --- */
+      .cabinet {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* Screen bezel */
+      .bezel {
+        background: linear-gradient(180deg, #2a2a2a 0%, #1e1e1e 20%, #252525 80%, #2a2a2a 100%);
+        border: 3px solid #444;
+        border-radius: 8px;
+        padding: 20px 24px 24px;
+        position: relative;
+        box-shadow:
+          inset 0 2px 10px rgba(0, 0, 0, 0.5),
+          0 8px 30px rgba(0, 0, 0, 0.7),
+          -4px 0 15px rgba(0, 0, 0, 0.3),
+          4px 0 15px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Screws on bezel corners */
+      .bezel::before,
+      .bezel::after {
+        content: '';
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: radial-gradient(circle, #666 30%, #333 70%);
+        border-radius: 50%;
+        border: 1px solid #222;
+      }
+
+      .bezel::before {
+        top: 8px;
+        left: 8px;
+        box-shadow: 832px 0 0 0 #444;
+      }
+
+      .bezel::after {
+        bottom: 8px;
+        left: 8px;
+        box-shadow: 832px 0 0 0 #444;
+      }
+
+      /* Screen glass effect */
+      .screen-wrap {
+        position: relative;
+        border-radius: 6px;
+        overflow: hidden;
+        box-shadow:
+          inset 0 0 30px rgba(0, 0, 0, 0.8),
+          0 0 2px #000;
+      }
+
+      /* Scanline overlay */
+      .screen-wrap::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(0, 0, 0, 0.06) 2px,
+          rgba(0, 0, 0, 0.06) 4px
+        );
+        pointer-events: none;
+        z-index: 10;
+        border-radius: 6px;
+      }
+
+      /* Slight screen curvature glow */
+      .screen-wrap::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(
+          ellipse at 50% 50%,
+          transparent 60%,
+          rgba(0, 0, 0, 0.4) 100%
+        );
+        pointer-events: none;
+        z-index: 11;
+        border-radius: 6px;
+      }
+
+      /* The Phaser canvas */
+      .screen-wrap canvas {
+        display: block;
+        border-radius: 6px;
+      }
+
+      /* Control panel below screen */
+      .control-panel {
+        background: linear-gradient(180deg, #2a2a2a 0%, #222 50%, #1a1a1a 100%);
+        border: 3px solid #444;
+        border-top: 2px solid #333;
+        border-radius: 0 0 8px 8px;
+        padding: 14px 30px;
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        box-shadow:
+          inset 0 2px 5px rgba(0, 0, 0, 0.3),
+          0 4px 10px rgba(0, 0, 0, 0.5);
+      }
+
+      .control-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .control-label {
+        font-size: 9px;
+        color: #ffcc00;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        text-shadow: 0 0 5px rgba(255, 204, 0, 0.5);
+      }
+
+      .control-keys {
+        font-size: 11px;
+        color: #aaa;
+        letter-spacing: 1px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cabinet">
+      <div class="bezel">
+        <div class="screen-wrap" id="game-container"></div>
+      </div>
+      <div class="control-panel">
+        <div class="control-group">
+          <span class="control-label">Move</span>
+          <span class="control-keys">&#9664; &#9654; / A D</span>
+        </div>
+        <div class="control-group">
+          <span class="control-label">Jump</span>
+          <span class="control-keys">SPACE</span>
+        </div>
+        <div class="control-group">
+          <span class="control-label">Crouch</span>
+          <span class="control-keys">&#9660; / S</span>
+        </div>
+        <div class="control-group">
+          <span class="control-label">Punch</span>
+          <span class="control-keys">1</span>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/game.ts"></script>
+  </body>
+</html>

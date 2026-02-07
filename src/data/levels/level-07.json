@@ -1,0 +1,88 @@
+{
+  "id": "level-07",
+  "name": "Park Row",
+  "episode": 7,
+  "title": "Where the Fallen Sleep",
+  "narration": [
+    "Park Row used to have trees. Benches. Children laughing.",
+    "Now it has needles and spent casings and chalk outlines.",
+    "The shelter on Fifth closed last month. Budget cuts, they said.",
+    "The people who lived there sleep in doorways now, if they sleep at all.",
+    "I can't save this city from itself. But I can save it from them."
+  ],
+  "worldWidth": 4500,
+  "worldHeight": 500,
+  "background": {
+    "theme": "7",
+    "layers": []
+  },
+  "music": "gameMusic",
+  "player": { "x": 100, "y": 420 },
+  "platforms": [
+    { "x": 600, "y": 600, "texture": "ground", "scale": 9, "label": "FLOOR" },
+
+    { "x": 200, "y": 400, "texture": "platform", "scale": 0.65, "label": "PARK ENTRANCE" },
+    { "x": 350, "y": 400, "texture": "platform", "scale": 0.65 },
+    { "x": 500, "y": 330, "texture": "platform", "scale": 0.25 },
+    { "x": 550, "y": 330, "texture": "platform", "scale": 0.25 },
+    { "x": 600, "y": 330, "texture": "platform", "scale": 0.25 },
+    { "x": 650, "y": 330, "texture": "platform", "scale": 0.25 },
+    { "x": 700, "y": 330, "texture": "platform", "scale": 0.25 },
+
+    { "x": 850, "y": 230, "texture": "platform", "scale": 0.25, "label": "MONUMENT CLIMB" },
+    { "x": 900, "y": 230, "texture": "platform", "scale": 0.25 },
+    { "x": 950, "y": 230, "texture": "platform", "scale": 0.25 },
+    { "x": 1050, "y": 160, "texture": "platform", "scale": 0.25 },
+    { "x": 1100, "y": 160, "texture": "platform", "scale": 0.25 },
+    { "x": 1150, "y": 160, "texture": "platform", "scale": 0.25 },
+
+    { "x": 1350, "y": 400, "texture": "platform", "scale": 0.65, "label": "SUNKEN GARDEN" },
+    { "x": 1550, "y": 330, "texture": "platform", "scale": 0.5 },
+    { "x": 1750, "y": 260, "texture": "platform", "scale": 0.25 },
+    { "x": 1800, "y": 260, "texture": "platform", "scale": 0.25 },
+    { "x": 1850, "y": 260, "texture": "platform", "scale": 0.25 },
+    { "x": 1900, "y": 260, "texture": "platform", "scale": 0.25 },
+
+    { "x": 2100, "y": 170, "texture": "platform", "scale": 0.25, "label": "CLOCK TOWER PATH" },
+    { "x": 2150, "y": 170, "texture": "platform", "scale": 0.25 },
+    { "x": 2200, "y": 170, "texture": "platform", "scale": 0.25 },
+    { "x": 2350, "y": 400, "texture": "platform", "scale": 0.65 },
+
+    { "x": 2550, "y": 330, "texture": "platform", "scale": 0.5, "label": "BANDSHELL RUINS" },
+    { "x": 2750, "y": 260, "texture": "platform", "scale": 0.25 },
+    { "x": 2800, "y": 260, "texture": "platform", "scale": 0.25 },
+    { "x": 2850, "y": 260, "texture": "platform", "scale": 0.25 },
+    { "x": 2950, "y": 190, "texture": "platform", "scale": 0.25 },
+    { "x": 3000, "y": 190, "texture": "platform", "scale": 0.25 },
+
+    { "x": 3200, "y": 400, "texture": "platform", "scale": 0.65, "label": "CEMETERY GATE" },
+    { "x": 3400, "y": 330, "texture": "platform", "scale": 0.5 },
+    { "x": 3600, "y": 260, "texture": "platform", "scale": 0.25 },
+    { "x": 3650, "y": 260, "texture": "platform", "scale": 0.25 },
+    { "x": 3700, "y": 260, "texture": "platform", "scale": 0.25 },
+
+    { "x": 3900, "y": 170, "texture": "platform", "scale": 0.25, "label": "MAUSOLEUM TOP" },
+    { "x": 3950, "y": 170, "texture": "platform", "scale": 0.25 },
+    { "x": 4000, "y": 170, "texture": "platform", "scale": 0.25 },
+    { "x": 4050, "y": 170, "texture": "platform", "scale": 0.25 },
+    { "x": 4100, "y": 170, "texture": "platform", "scale": 0.25 },
+    { "x": 4150, "y": 170, "texture": "platform", "scale": 0.25 },
+    { "x": 4200, "y": 170, "texture": "platform", "scale": 0.25 },
+    { "x": 4250, "y": 170, "texture": "platform", "scale": 0.25 }
+  ],
+  "enemies": [
+    { "type": "gangster-melee", "x": 600, "y": 280, "patrolLeftBound": 450, "patrolRightBound": 750 },
+    { "type": "gangster-melee", "x": 1100, "y": 110, "patrolLeftBound": 1000, "patrolRightBound": 1200 },
+    { "type": "gangster-melee", "x": 1850, "y": 210, "patrolLeftBound": 1700, "patrolRightBound": 2000 },
+    { "type": "gangster-melee", "x": 2800, "y": 210, "patrolLeftBound": 2700, "patrolRightBound": 2950 },
+    { "type": "gangster-melee", "x": 3600, "y": 210, "patrolLeftBound": 3500, "patrolRightBound": 3750 },
+    { "type": "gangster-ranged", "x": 2200, "y": 120, "patrolLeftBound": 2100, "patrolRightBound": 2300 },
+    { "type": "gangster-ranged", "x": 3000, "y": 140, "patrolLeftBound": 2900, "patrolRightBound": 3100 },
+    { "type": "gangster-ranged", "x": 4100, "y": 120, "patrolLeftBound": 3950, "patrolRightBound": 4250 }
+  ],
+  "npcs": [
+    { "type": "homeless-1", "x": 800, "y": 280 },
+    { "type": "homeless-3", "x": 2500, "y": 280 },
+    { "type": "homeless-2", "x": 3550, "y": 210 }
+  ]
+}

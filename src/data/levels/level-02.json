@@ -1,0 +1,70 @@
+{
+  "id": "level-02",
+  "name": "The Narrows",
+  "episode": 2,
+  "title": "The Rat King's Kingdom",
+  "narration": [
+    "The Narrows. Where Gotham sends the people it wants to forget.",
+    "Down here, the rats outnumber the residents two to one.",
+    "Someone's been organizing them -- the gangs, not the rats.",
+    "Although, in the Narrows, the distinction is academic.",
+    "Time to remind them who really owns these streets."
+  ],
+  "worldWidth": 3200,
+  "worldHeight": 384,
+  "background": {
+    "theme": "2",
+    "layers": []
+  },
+  "music": "gameMusic",
+  "player": { "x": 100, "y": 300 },
+  "platforms": [
+    { "x": 400, "y": 600, "texture": "ground", "scale": 6, "label": "FLOOR" },
+
+    { "x": 250, "y": 320, "texture": "platform", "scale": 0.5, "label": "OPENING SECTION" },
+    { "x": 400, "y": 320, "texture": "platform", "scale": 0.5 },
+    { "x": 550, "y": 280, "texture": "platform", "scale": 0.25 },
+    { "x": 600, "y": 280, "texture": "platform", "scale": 0.25 },
+    { "x": 650, "y": 280, "texture": "platform", "scale": 0.25 },
+
+    { "x": 850, "y": 350, "texture": "platform", "scale": 0.65, "label": "MID PLATFORMS" },
+    { "x": 1000, "y": 280, "texture": "platform", "scale": 0.25 },
+    { "x": 1050, "y": 280, "texture": "platform", "scale": 0.25 },
+    { "x": 1100, "y": 280, "texture": "platform", "scale": 0.25 },
+    { "x": 1150, "y": 280, "texture": "platform", "scale": 0.25 },
+
+    { "x": 1350, "y": 350, "texture": "platform", "scale": 0.65, "label": "NARROW BRIDGE" },
+    { "x": 1500, "y": 320, "texture": "platform", "scale": 0.25 },
+    { "x": 1550, "y": 320, "texture": "platform", "scale": 0.25 },
+    { "x": 1600, "y": 320, "texture": "platform", "scale": 0.25 },
+
+    { "x": 1800, "y": 200, "texture": "platform", "scale": 0.25, "label": "HIGH ROUTE" },
+    { "x": 1850, "y": 200, "texture": "platform", "scale": 0.25 },
+    { "x": 1900, "y": 200, "texture": "platform", "scale": 0.25 },
+
+    { "x": 2050, "y": 350, "texture": "platform", "scale": 0.65, "label": "DESCENT" },
+    { "x": 2200, "y": 300, "texture": "platform", "scale": 0.5 },
+    { "x": 2350, "y": 250, "texture": "platform", "scale": 0.25 },
+    { "x": 2400, "y": 250, "texture": "platform", "scale": 0.25 },
+    { "x": 2450, "y": 250, "texture": "platform", "scale": 0.25 },
+
+    { "x": 2650, "y": 180, "texture": "platform", "scale": 0.25, "label": "FINAL PLATFORMS" },
+    { "x": 2700, "y": 180, "texture": "platform", "scale": 0.25 },
+    { "x": 2750, "y": 180, "texture": "platform", "scale": 0.25 },
+    { "x": 2800, "y": 180, "texture": "platform", "scale": 0.25 },
+    { "x": 2850, "y": 180, "texture": "platform", "scale": 0.25 },
+    { "x": 2900, "y": 180, "texture": "platform", "scale": 0.25 },
+    { "x": 2950, "y": 180, "texture": "platform", "scale": 0.25 },
+    { "x": 3000, "y": 180, "texture": "platform", "scale": 0.25 }
+  ],
+  "enemies": [
+    { "type": "gangster-melee", "x": 500, "y": 300, "patrolLeftBound": 350, "patrolRightBound": 700 },
+    { "type": "gangster-melee", "x": 1100, "y": 300, "patrolLeftBound": 950, "patrolRightBound": 1250 },
+    { "type": "gangster-melee", "x": 1600, "y": 300, "patrolLeftBound": 1450, "patrolRightBound": 1750 },
+    { "type": "gangster-melee", "x": 2800, "y": 130, "patrolLeftBound": 2650, "patrolRightBound": 3000 }
+  ],
+  "npcs": [
+    { "type": "homeless-2", "x": 800, "y": 300 },
+    { "type": "homeless-1", "x": 2100, "y": 300 }
+  ]
+}

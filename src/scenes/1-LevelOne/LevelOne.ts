@@ -1,13 +1,21 @@
 import { Scene } from 'phaser';
 import { registerAnimations, createInputKeys } from '../../controls/controls.utils';
-import { getSceneAssets, createPlatforms } from './LevelOne.utils';
+import { getSceneAssets } from './LevelOne.utils';
+import {
+  LevelData,
+  createPlatformsFromData,
+  createBackgroundLayers,
+} from '../../systems/LevelLoader';
 import Batman from '../../entities/Batman';
 import Enemy from '../../entities/Enemy';
+import NPC from '../../entities/NPC';
 import HUD from '../../ui/HUD';
+import levelOneData from '../../data/levels/level-01.json';
 
 export default class LevelOne extends Scene {
   private batman!: Batman;
   private enemies: Enemy[] = [];
+  private npcs: NPC[] = [];
   private hud!: HUD;
   private platforms!: Phaser.Physics.Arcade.StaticGroup;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -15,6 +23,7 @@ export default class LevelOne extends Scene {
   private gameMusic!: Phaser.Sound.BaseSound;
   private gameOver = false;
   private levelComplete = false;
+  private levelData: LevelData = levelOneData as LevelData;
 
   constructor() {
     super({ key: 'LevelOne' });
@@ -29,13 +38,11 @@ export default class LevelOne extends Scene {
     this.levelComplete = false;
 
     // Music
-    this.gameMusic = this.sound.add('gameMusic');
+    this.gameMusic = this.sound.add(this.levelData.music);
     this.gameMusic.play({ volume: 0.35, loop: true });
 
-    // Parallax background layers
-    this.add.image(1411, 185, 'starry-night');
-    this.add.image(1411, 310, 'background');
-    this.add.image(1411, 390, 'foreground');
+    // Parallax background layers from level data
+    createBackgroundLayers(this, this.levelData.background.layers);
 
     // Register all animations (Batman + Enemy)
     registerAnimations(this.anims);
@@ -45,44 +52,44 @@ export default class LevelOne extends Scene {
     this.cursors = input.cursors;
     this.keys = input.keys;
 
-    // Platforms
-    this.platforms = createPlatforms(this.physics);
+    // Platforms from level data
+    this.platforms = createPlatformsFromData(
+      this.physics,
+      this.levelData.platforms
+    );
 
-    // Batman
+    // Batman at spawn point from level data
     this.batman = new Batman({
       scene: this,
-      x: 100,
-      y: 450,
+      x: this.levelData.player.x,
+      y: this.levelData.player.y,
       platforms: this.platforms,
     });
 
-    // Enemies — placed on ground and platforms
-    this.enemies = [
-      new Enemy({
-        scene: this,
-        x: 600,
-        y: 450,
-        platforms: this.platforms,
-        patrolLeftBound: 450,
-        patrolRightBound: 750,
-      }),
-      new Enemy({
-        scene: this,
-        x: 1500,
-        y: 450,
-        platforms: this.platforms,
-        patrolLeftBound: 1400,
-        patrolRightBound: 1700,
-      }),
-      new Enemy({
-        scene: this,
-        x: 2300,
-        y: 100,
-        platforms: this.platforms,
-        patrolLeftBound: 2200,
-        patrolRightBound: 2550,
-      }),
-    ];
+    // Enemies from level data
+    this.enemies = this.levelData.enemies.map(
+      (e) =>
+        new Enemy({
+          scene: this,
+          x: e.x,
+          y: e.y,
+          platforms: this.platforms,
+          patrolLeftBound: e.patrolLeftBound,
+          patrolRightBound: e.patrolRightBound,
+        })
+    );
+
+    // NPCs from level data
+    this.npcs = this.levelData.npcs.map(
+      (n) =>
+        new NPC({
+          scene: this,
+          x: n.x,
+          y: n.y,
+          type: n.type,
+          platforms: this.platforms,
+        })
+    );
 
     // Batman-Enemy overlap for contact damage
     this.enemies.forEach((enemy) => {
@@ -97,11 +104,16 @@ export default class LevelOne extends Scene {
       );
     });
 
-    // World bounds
-    this.physics.world.bounds.width = 2822;
+    // World bounds from level data
+    this.physics.world.bounds.width = this.levelData.worldWidth;
 
     // Camera
-    this.cameras.main.setBounds(0, 0, 2822, 384);
+    this.cameras.main.setBounds(
+      0,
+      0,
+      this.levelData.worldWidth,
+      this.levelData.worldHeight
+    );
     this.cameras.main.startFollow(this.batman.sprite);
 
     // HUD
@@ -119,8 +131,14 @@ export default class LevelOne extends Scene {
       enemy.update(this.batman);
     });
 
+    // Update NPCs
+    this.npcs.forEach((npc) => {
+      npc.update(this.batman);
+    });
+
     // Update HUD
     this.hud.update();
+    this.hud.setRescueCount(this.npcs.filter((n) => n.isRescued).length);
 
     // Check for game over
     if (this.batman.isDead()) {
@@ -135,52 +153,17 @@ export default class LevelOne extends Scene {
 
   private handleWin(): void {
     this.levelComplete = true;
+    this.gameMusic.stop();
 
-    const centerX = this.cameras.main.scrollX + 400;
-    const centerY = this.cameras.main.scrollY + 150;
+    const rescuedCount = this.npcs.filter((n) => n.isRescued).length;
 
-    this.add
-      .text(centerX, centerY, 'GOTHAM IS SAFE', {
-        fontSize: '42px',
-        color: '#ffcc00',
-        fontStyle: 'bold',
-        backgroundColor: 'rgba(0,0,0,0.8)',
-        padding: { x: 20, y: 10 },
-      })
-      .setOrigin(0.5)
-      .setDepth(200);
-
-    this.add
-      .text(centerX, centerY + 50, 'SCORE: ' + this.batman.score, {
-        fontSize: '24px',
-        color: '#ffffff',
-        backgroundColor: 'rgba(0,0,0,0.6)',
-        padding: { x: 10, y: 5 },
-      })
-      .setOrigin(0.5)
-      .setDepth(200);
-
-    const restartText = this.add
-      .text(centerX, centerY + 100, 'Press SPACE to play again', {
-        fontSize: '18px',
-        color: '#ffffff',
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        padding: { x: 10, y: 5 },
-      })
-      .setOrigin(0.5)
-      .setDepth(200);
-
-    this.time.addEvent({
-      delay: 500,
-      loop: true,
-      callback: () => {
-        restartText.setAlpha(restartText.alpha === 1 ? 0.3 : 1);
-      },
-    });
-
-    this.input.keyboard.once('keydown-SPACE', () => {
-      this.gameMusic.stop();
-      this.scene.restart();
+    // Brief delay before transitioning to the victory scene
+    this.time.delayedCall(500, () => {
+      this.scene.start('LevelComplete', {
+        score: this.batman.score,
+        rescued: rescuedCount,
+        levelName: this.levelData.name,
+      });
     });
   }
 
@@ -188,45 +171,14 @@ export default class LevelOne extends Scene {
     this.gameOver = true;
     this.batman.sprite.setVelocity(0, 0);
     this.batman.sprite.setTint(0xff0000);
+    this.gameMusic.stop();
 
-    // Display game over text
-    const centerX = this.cameras.main.scrollX + 400;
-    const centerY = this.cameras.main.scrollY + 200;
-
-    this.add
-      .text(centerX, centerY, 'GAME OVER', {
-        fontSize: '48px',
-        color: '#ff0000',
-        fontStyle: 'bold',
-        backgroundColor: 'rgba(0,0,0,0.7)',
-        padding: { x: 20, y: 10 },
-      })
-      .setOrigin(0.5)
-      .setDepth(200);
-
-    const restartText = this.add
-      .text(centerX, centerY + 60, 'Press SPACE to restart', {
-        fontSize: '20px',
-        color: '#ffffff',
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        padding: { x: 10, y: 5 },
-      })
-      .setOrigin(0.5)
-      .setDepth(200);
-
-    // Flicker the restart text
-    this.time.addEvent({
-      delay: 500,
-      loop: true,
-      callback: () => {
-        restartText.setAlpha(restartText.alpha === 1 ? 0.3 : 1);
-      },
-    });
-
-    // Listen for restart
-    this.input.keyboard.once('keydown-SPACE', () => {
-      this.gameMusic.stop();
-      this.scene.restart();
+    // Brief delay before transitioning to the game over scene
+    this.time.delayedCall(1000, () => {
+      this.scene.start('GameOver', {
+        score: this.batman.score,
+        levelName: this.levelData.name,
+      });
     });
   }
 }
