@@ -1,0 +1,82 @@
+{
+  "id": "level-06",
+  "name": "Otisburg",
+  "episode": 6,
+  "title": "A Crooked Mile",
+  "narration": [
+    "Otisburg. Named after a man who thought he could buy respectability.",
+    "He couldn't. But the name stuck, and so did the corruption.",
+    "Every badge here has a price tag. Every judge, a second ledger.",
+    "The gangs don't hide in Otisburg. They run for office.",
+    "The law won't clean this mile. So I will."
+  ],
+  "worldWidth": 4200,
+  "worldHeight": 450,
+  "background": {
+    "theme": "6",
+    "layers": []
+  },
+  "music": "gameMusic",
+  "player": { "x": 100, "y": 370 },
+  "platforms": [
+    { "x": 500, "y": 600, "texture": "ground", "scale": 8, "label": "FLOOR" },
+
+    { "x": 200, "y": 370, "texture": "platform", "scale": 0.65, "label": "COURTHOUSE STEPS" },
+    { "x": 350, "y": 300, "texture": "platform", "scale": 0.5 },
+    { "x": 500, "y": 240, "texture": "platform", "scale": 0.25 },
+    { "x": 550, "y": 240, "texture": "platform", "scale": 0.25 },
+    { "x": 600, "y": 240, "texture": "platform", "scale": 0.25 },
+    { "x": 650, "y": 240, "texture": "platform", "scale": 0.25 },
+
+    { "x": 850, "y": 350, "texture": "platform", "scale": 0.65, "label": "PRECINCT ROW" },
+    { "x": 1000, "y": 350, "texture": "platform", "scale": 0.65 },
+    { "x": 1200, "y": 280, "texture": "platform", "scale": 0.25 },
+    { "x": 1250, "y": 280, "texture": "platform", "scale": 0.25 },
+    { "x": 1300, "y": 280, "texture": "platform", "scale": 0.25 },
+    { "x": 1350, "y": 280, "texture": "platform", "scale": 0.25 },
+    { "x": 1400, "y": 280, "texture": "platform", "scale": 0.25 },
+
+    { "x": 1600, "y": 180, "texture": "platform", "scale": 0.25, "label": "FIRE ESCAPE CLIMB" },
+    { "x": 1650, "y": 180, "texture": "platform", "scale": 0.25 },
+    { "x": 1700, "y": 180, "texture": "platform", "scale": 0.25 },
+    { "x": 1800, "y": 320, "texture": "platform", "scale": 0.5 },
+
+    { "x": 2000, "y": 370, "texture": "platform", "scale": 0.65, "label": "CITY HALL PLAZA" },
+    { "x": 2200, "y": 300, "texture": "platform", "scale": 0.5 },
+    { "x": 2400, "y": 230, "texture": "platform", "scale": 0.25 },
+    { "x": 2450, "y": 230, "texture": "platform", "scale": 0.25 },
+    { "x": 2500, "y": 230, "texture": "platform", "scale": 0.25 },
+    { "x": 2550, "y": 230, "texture": "platform", "scale": 0.25 },
+    { "x": 2600, "y": 230, "texture": "platform", "scale": 0.25 },
+
+    { "x": 2800, "y": 350, "texture": "platform", "scale": 0.65, "label": "PARKING GARAGE" },
+    { "x": 3000, "y": 280, "texture": "platform", "scale": 0.5 },
+    { "x": 3200, "y": 200, "texture": "platform", "scale": 0.25 },
+    { "x": 3250, "y": 200, "texture": "platform", "scale": 0.25 },
+    { "x": 3300, "y": 200, "texture": "platform", "scale": 0.25 },
+
+    { "x": 3500, "y": 160, "texture": "platform", "scale": 0.25, "label": "PENTHOUSE FINALE" },
+    { "x": 3550, "y": 160, "texture": "platform", "scale": 0.25 },
+    { "x": 3600, "y": 160, "texture": "platform", "scale": 0.25 },
+    { "x": 3650, "y": 160, "texture": "platform", "scale": 0.25 },
+    { "x": 3700, "y": 160, "texture": "platform", "scale": 0.25 },
+    { "x": 3750, "y": 160, "texture": "platform", "scale": 0.25 },
+    { "x": 3800, "y": 160, "texture": "platform", "scale": 0.25 },
+    { "x": 3850, "y": 160, "texture": "platform", "scale": 0.25 },
+    { "x": 3900, "y": 160, "texture": "platform", "scale": 0.25 }
+  ],
+  "enemies": [
+    { "type": "gangster-melee", "x": 550, "y": 190, "patrolLeftBound": 400, "patrolRightBound": 700 },
+    { "type": "gangster-melee", "x": 1050, "y": 300, "patrolLeftBound": 900, "patrolRightBound": 1200 },
+    { "type": "gangster-melee", "x": 2200, "y": 250, "patrolLeftBound": 2050, "patrolRightBound": 2400 },
+    { "type": "gangster-melee", "x": 2900, "y": 230, "patrolLeftBound": 2800, "patrolRightBound": 3100 },
+    { "type": "gangster-ranged", "x": 1650, "y": 130, "patrolLeftBound": 1550, "patrolRightBound": 1750 },
+    { "type": "gangster-ranged", "x": 2500, "y": 180, "patrolLeftBound": 2400, "patrolRightBound": 2650 },
+    { "type": "gangster-ranged", "x": 3700, "y": 110, "patrolLeftBound": 3550, "patrolRightBound": 3900 }
+  ],
+  "npcs": [
+    { "type": "homeless-1", "x": 800, "y": 300 },
+    { "type": "homeless-2", "x": 1950, "y": 320 },
+    { "type": "homeless-3", "x": 3150, "y": 150 }
+  ]
+}

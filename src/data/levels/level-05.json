@@ -1,0 +1,80 @@
+{
+  "id": "level-05",
+  "name": "Chinatown",
+  "episode": 5,
+  "title": "Neon and Gunpowder",
+  "narration": [
+    "Chinatown glows like a fever dream. Neon on wet asphalt.",
+    "The triads kept order here for decades. A brutal order, but order.",
+    "Now the Gotham gangs want in. They smell money.",
+    "The old guard won't surrender quietly. Caught in the crossfire:",
+    "everyone who can't afford to leave."
+  ],
+  "worldWidth": 4000,
+  "worldHeight": 450,
+  "background": {
+    "theme": "5",
+    "layers": []
+  },
+  "music": "gameMusic",
+  "player": { "x": 100, "y": 370 },
+  "platforms": [
+    { "x": 500, "y": 600, "texture": "ground", "scale": 8, "label": "FLOOR" },
+
+    { "x": 250, "y": 370, "texture": "platform", "scale": 0.65, "label": "MARKET STALLS" },
+    { "x": 400, "y": 370, "texture": "platform", "scale": 0.65 },
+    { "x": 550, "y": 300, "texture": "platform", "scale": 0.25 },
+    { "x": 600, "y": 300, "texture": "platform", "scale": 0.25 },
+    { "x": 650, "y": 300, "texture": "platform", "scale": 0.25 },
+    { "x": 700, "y": 300, "texture": "platform", "scale": 0.25 },
+    { "x": 750, "y": 300, "texture": "platform", "scale": 0.25 },
+
+    { "x": 900, "y": 200, "texture": "platform", "scale": 0.25, "label": "ROOFTOP GARDEN" },
+    { "x": 950, "y": 200, "texture": "platform", "scale": 0.25 },
+    { "x": 1000, "y": 200, "texture": "platform", "scale": 0.25 },
+    { "x": 1100, "y": 350, "texture": "platform", "scale": 0.65 },
+
+    { "x": 1300, "y": 280, "texture": "platform", "scale": 0.25, "label": "LANTERN ROW" },
+    { "x": 1350, "y": 280, "texture": "platform", "scale": 0.25 },
+    { "x": 1400, "y": 280, "texture": "platform", "scale": 0.25 },
+    { "x": 1500, "y": 200, "texture": "platform", "scale": 0.5 },
+    { "x": 1650, "y": 280, "texture": "platform", "scale": 0.25 },
+    { "x": 1700, "y": 280, "texture": "platform", "scale": 0.25 },
+    { "x": 1750, "y": 280, "texture": "platform", "scale": 0.25 },
+
+    { "x": 1950, "y": 370, "texture": "platform", "scale": 0.65, "label": "BACK ALLEYS" },
+    { "x": 2150, "y": 300, "texture": "platform", "scale": 0.5 },
+    { "x": 2350, "y": 230, "texture": "platform", "scale": 0.25 },
+    { "x": 2400, "y": 230, "texture": "platform", "scale": 0.25 },
+    { "x": 2450, "y": 230, "texture": "platform", "scale": 0.25 },
+    { "x": 2500, "y": 230, "texture": "platform", "scale": 0.25 },
+
+    { "x": 2700, "y": 370, "texture": "platform", "scale": 0.65, "label": "WAREHOUSE DISTRICT" },
+    { "x": 2900, "y": 320, "texture": "platform", "scale": 0.5 },
+    { "x": 3100, "y": 260, "texture": "platform", "scale": 0.25 },
+    { "x": 3150, "y": 260, "texture": "platform", "scale": 0.25 },
+    { "x": 3200, "y": 260, "texture": "platform", "scale": 0.25 },
+
+    { "x": 3400, "y": 180, "texture": "platform", "scale": 0.25, "label": "PAGODA TOP" },
+    { "x": 3450, "y": 180, "texture": "platform", "scale": 0.25 },
+    { "x": 3500, "y": 180, "texture": "platform", "scale": 0.25 },
+    { "x": 3550, "y": 180, "texture": "platform", "scale": 0.25 },
+    { "x": 3600, "y": 180, "texture": "platform", "scale": 0.25 },
+    { "x": 3650, "y": 180, "texture": "platform", "scale": 0.25 },
+    { "x": 3700, "y": 180, "texture": "platform", "scale": 0.25 },
+    { "x": 3750, "y": 180, "texture": "platform", "scale": 0.25 }
+  ],
+  "enemies": [
+    { "type": "gangster-melee", "x": 500, "y": 300, "patrolLeftBound": 350, "patrolRightBound": 700 },
+    { "type": "gangster-melee", "x": 1000, "y": 150, "patrolLeftBound": 850, "patrolRightBound": 1100 },
+    { "type": "gangster-melee", "x": 1500, "y": 150, "patrolLeftBound": 1350, "patrolRightBound": 1650 },
+    { "type": "gangster-melee", "x": 2200, "y": 250, "patrolLeftBound": 2050, "patrolRightBound": 2400 },
+    { "type": "gangster-melee", "x": 2900, "y": 270, "patrolLeftBound": 2750, "patrolRightBound": 3100 },
+    { "type": "gangster-ranged", "x": 3150, "y": 210, "patrolLeftBound": 3050, "patrolRightBound": 3300 },
+    { "type": "gangster-ranged", "x": 3600, "y": 130, "patrolLeftBound": 3450, "patrolRightBound": 3750 }
+  ],
+  "npcs": [
+    { "type": "homeless-2", "x": 850, "y": 300 },
+    { "type": "homeless-3", "x": 2650, "y": 320 }
+  ]
+}

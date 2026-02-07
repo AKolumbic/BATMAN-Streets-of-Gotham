@@ -1,0 +1,101 @@
+{
+  "id": "level-08",
+  "name": "Arkham District",
+  "episode": 8,
+  "title": "The Devil You Know",
+  "narration": [
+    "The Arkham District. Even the cops don't come here after dark.",
+    "This is where Gotham's worst nightmares bleed into the waking world.",
+    "Someone's consolidating power. Uniting the gangs under one banner.",
+    "I've seen this playbook before. It always ends the same way.",
+    "With me, standing in the rubble, wondering if it was enough.",
+    "Tonight, it has to be enough."
+  ],
+  "worldWidth": 5000,
+  "worldHeight": 500,
+  "background": {
+    "theme": "8",
+    "layers": []
+  },
+  "music": "gameMusic",
+  "player": { "x": 100, "y": 420 },
+  "platforms": [
+    { "x": 700, "y": 600, "texture": "ground", "scale": 10, "label": "FLOOR" },
+
+    { "x": 200, "y": 400, "texture": "platform", "scale": 0.65, "label": "ASYLUM GATE" },
+    { "x": 350, "y": 400, "texture": "platform", "scale": 0.65 },
+    { "x": 500, "y": 330, "texture": "platform", "scale": 0.25 },
+    { "x": 550, "y": 330, "texture": "platform", "scale": 0.25 },
+    { "x": 600, "y": 330, "texture": "platform", "scale": 0.25 },
+    { "x": 650, "y": 330, "texture": "platform", "scale": 0.25 },
+    { "x": 700, "y": 330, "texture": "platform", "scale": 0.25 },
+    { "x": 750, "y": 330, "texture": "platform", "scale": 0.25 },
+
+    { "x": 900, "y": 230, "texture": "platform", "scale": 0.25, "label": "GUARD TOWER" },
+    { "x": 950, "y": 230, "texture": "platform", "scale": 0.25 },
+    { "x": 1000, "y": 230, "texture": "platform", "scale": 0.25 },
+    { "x": 1050, "y": 230, "texture": "platform", "scale": 0.25 },
+    { "x": 1150, "y": 150, "texture": "platform", "scale": 0.25 },
+    { "x": 1200, "y": 150, "texture": "platform", "scale": 0.25 },
+    { "x": 1250, "y": 150, "texture": "platform", "scale": 0.25 },
+
+    { "x": 1450, "y": 400, "texture": "platform", "scale": 0.65, "label": "COURTYARD" },
+    { "x": 1650, "y": 330, "texture": "platform", "scale": 0.5 },
+    { "x": 1850, "y": 260, "texture": "platform", "scale": 0.25 },
+    { "x": 1900, "y": 260, "texture": "platform", "scale": 0.25 },
+    { "x": 1950, "y": 260, "texture": "platform", "scale": 0.25 },
+    { "x": 2000, "y": 260, "texture": "platform", "scale": 0.25 },
+    { "x": 2050, "y": 260, "texture": "platform", "scale": 0.25 },
+
+    { "x": 2250, "y": 170, "texture": "platform", "scale": 0.25, "label": "CELL BLOCK ROOFS" },
+    { "x": 2300, "y": 170, "texture": "platform", "scale": 0.25 },
+    { "x": 2350, "y": 170, "texture": "platform", "scale": 0.25 },
+    { "x": 2400, "y": 170, "texture": "platform", "scale": 0.25 },
+    { "x": 2500, "y": 400, "texture": "platform", "scale": 0.65 },
+
+    { "x": 2700, "y": 330, "texture": "platform", "scale": 0.5, "label": "EXERCISE YARD" },
+    { "x": 2900, "y": 260, "texture": "platform", "scale": 0.25 },
+    { "x": 2950, "y": 260, "texture": "platform", "scale": 0.25 },
+    { "x": 3000, "y": 260, "texture": "platform", "scale": 0.25 },
+    { "x": 3050, "y": 260, "texture": "platform", "scale": 0.25 },
+    { "x": 3150, "y": 180, "texture": "platform", "scale": 0.25 },
+    { "x": 3200, "y": 180, "texture": "platform", "scale": 0.25 },
+    { "x": 3250, "y": 180, "texture": "platform", "scale": 0.25 },
+
+    { "x": 3450, "y": 400, "texture": "platform", "scale": 0.65, "label": "WARDEN'S WING" },
+    { "x": 3650, "y": 330, "texture": "platform", "scale": 0.5 },
+    { "x": 3850, "y": 260, "texture": "platform", "scale": 0.25 },
+    { "x": 3900, "y": 260, "texture": "platform", "scale": 0.25 },
+    { "x": 3950, "y": 260, "texture": "platform", "scale": 0.25 },
+    { "x": 4000, "y": 260, "texture": "platform", "scale": 0.25 },
+
+    { "x": 4200, "y": 150, "texture": "platform", "scale": 0.25, "label": "THE FINAL ROOFTOP" },
+    { "x": 4250, "y": 150, "texture": "platform", "scale": 0.25 },
+    { "x": 4300, "y": 150, "texture": "platform", "scale": 0.25 },
+    { "x": 4350, "y": 150, "texture": "platform", "scale": 0.25 },
+    { "x": 4400, "y": 150, "texture": "platform", "scale": 0.25 },
+    { "x": 4450, "y": 150, "texture": "platform", "scale": 0.25 },
+    { "x": 4500, "y": 150, "texture": "platform", "scale": 0.25 },
+    { "x": 4550, "y": 150, "texture": "platform", "scale": 0.25 },
+    { "x": 4600, "y": 150, "texture": "platform", "scale": 0.25 },
+    { "x": 4650, "y": 150, "texture": "platform", "scale": 0.25 }
+  ],
+  "enemies": [
+    { "type": "gangster-melee", "x": 600, "y": 280, "patrolLeftBound": 450, "patrolRightBound": 800 },
+    { "type": "gangster-melee", "x": 1050, "y": 180, "patrolLeftBound": 900, "patrolRightBound": 1150 },
+    { "type": "gangster-melee", "x": 2000, "y": 210, "patrolLeftBound": 1850, "patrolRightBound": 2100 },
+    { "type": "gangster-melee", "x": 2950, "y": 210, "patrolLeftBound": 2850, "patrolRightBound": 3100 },
+    { "type": "gangster-melee", "x": 3900, "y": 210, "patrolLeftBound": 3800, "patrolRightBound": 4050 },
+    { "type": "gangster-melee", "x": 4500, "y": 100, "patrolLeftBound": 4350, "patrolRightBound": 4650 },
+    { "type": "gangster-ranged", "x": 1200, "y": 100, "patrolLeftBound": 1100, "patrolRightBound": 1300 },
+    { "type": "gangster-ranged", "x": 2350, "y": 120, "patrolLeftBound": 2250, "patrolRightBound": 2450 },
+    { "type": "gangster-ranged", "x": 3200, "y": 130, "patrolLeftBound": 3100, "patrolRightBound": 3300 },
+    { "type": "gangster-ranged", "x": 4400, "y": 100, "patrolLeftBound": 4250, "patrolRightBound": 4550 }
+  ],
+  "npcs": [
+    { "type": "homeless-1", "x": 850, "y": 350 },
+    { "type": "homeless-3", "x": 1800, "y": 350 },
+    { "type": "homeless-2", "x": 2650, "y": 280 },
+    { "type": "homeless-1", "x": 3800, "y": 210 }
+  ]
+}

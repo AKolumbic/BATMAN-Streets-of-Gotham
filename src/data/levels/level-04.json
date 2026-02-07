@@ -1,0 +1,76 @@
+{
+  "id": "level-04",
+  "name": "Burnley",
+  "episode": 4,
+  "title": "Ashes and Alibis",
+  "narration": [
+    "Three arsons in Burnley this week. All tenement buildings.",
+    "The fire marshal calls them accidents. The insurance companies agree.",
+    "Funny how the same shell company holds every policy.",
+    "The displaced tenants have nowhere to go. Nobody cares.",
+    "Nobody except me."
+  ],
+  "worldWidth": 3800,
+  "worldHeight": 450,
+  "background": {
+    "theme": "4",
+    "layers": []
+  },
+  "music": "gameMusic",
+  "player": { "x": 100, "y": 370 },
+  "platforms": [
+    { "x": 500, "y": 600, "texture": "ground", "scale": 7, "label": "FLOOR" },
+
+    { "x": 200, "y": 380, "texture": "platform", "scale": 0.65, "label": "START" },
+    { "x": 350, "y": 380, "texture": "platform", "scale": 0.65 },
+    { "x": 500, "y": 300, "texture": "platform", "scale": 0.25 },
+    { "x": 550, "y": 300, "texture": "platform", "scale": 0.25 },
+    { "x": 600, "y": 300, "texture": "platform", "scale": 0.25 },
+
+    { "x": 750, "y": 200, "texture": "platform", "scale": 0.25, "label": "FIRE ESCAPES" },
+    { "x": 800, "y": 200, "texture": "platform", "scale": 0.25 },
+    { "x": 850, "y": 200, "texture": "platform", "scale": 0.25 },
+    { "x": 950, "y": 300, "texture": "platform", "scale": 0.5 },
+    { "x": 1100, "y": 380, "texture": "platform", "scale": 0.65 },
+
+    { "x": 1300, "y": 280, "texture": "platform", "scale": 0.25, "label": "COLLAPSED FLOORS" },
+    { "x": 1350, "y": 280, "texture": "platform", "scale": 0.25 },
+    { "x": 1450, "y": 200, "texture": "platform", "scale": 0.25 },
+    { "x": 1500, "y": 200, "texture": "platform", "scale": 0.25 },
+    { "x": 1550, "y": 200, "texture": "platform", "scale": 0.25 },
+    { "x": 1650, "y": 130, "texture": "platform", "scale": 0.25 },
+    { "x": 1700, "y": 130, "texture": "platform", "scale": 0.25 },
+
+    { "x": 1900, "y": 380, "texture": "platform", "scale": 0.65, "label": "GROUND RETURN" },
+    { "x": 2100, "y": 320, "texture": "platform", "scale": 0.5 },
+    { "x": 2300, "y": 250, "texture": "platform", "scale": 0.25 },
+    { "x": 2350, "y": 250, "texture": "platform", "scale": 0.25 },
+    { "x": 2400, "y": 250, "texture": "platform", "scale": 0.25 },
+    { "x": 2450, "y": 250, "texture": "platform", "scale": 0.25 },
+
+    { "x": 2650, "y": 350, "texture": "platform", "scale": 0.65, "label": "RUBBLE FIELD" },
+    { "x": 2850, "y": 300, "texture": "platform", "scale": 0.5 },
+    { "x": 3050, "y": 250, "texture": "platform", "scale": 0.25 },
+    { "x": 3100, "y": 250, "texture": "platform", "scale": 0.25 },
+
+    { "x": 3300, "y": 170, "texture": "platform", "scale": 0.25, "label": "ROOFTOP FINALE" },
+    { "x": 3350, "y": 170, "texture": "platform", "scale": 0.25 },
+    { "x": 3400, "y": 170, "texture": "platform", "scale": 0.25 },
+    { "x": 3450, "y": 170, "texture": "platform", "scale": 0.25 },
+    { "x": 3500, "y": 170, "texture": "platform", "scale": 0.25 },
+    { "x": 3550, "y": 170, "texture": "platform", "scale": 0.25 },
+    { "x": 3600, "y": 170, "texture": "platform", "scale": 0.25 }
+  ],
+  "enemies": [
+    { "type": "gangster-melee", "x": 500, "y": 300, "patrolLeftBound": 350, "patrolRightBound": 700 },
+    { "type": "gangster-melee", "x": 1100, "y": 330, "patrolLeftBound": 950, "patrolRightBound": 1200 },
+    { "type": "gangster-melee", "x": 2100, "y": 270, "patrolLeftBound": 1950, "patrolRightBound": 2250 },
+    { "type": "gangster-ranged", "x": 1650, "y": 80, "patrolLeftBound": 1550, "patrolRightBound": 1750 },
+    { "type": "gangster-ranged", "x": 3450, "y": 120, "patrolLeftBound": 3300, "patrolRightBound": 3600 }
+  ],
+  "npcs": [
+    { "type": "homeless-1", "x": 750, "y": 150 },
+    { "type": "homeless-2", "x": 1850, "y": 330 },
+    { "type": "homeless-3", "x": 2800, "y": 250 }
+  ]
+}

@@ -1,89 +1,80 @@
-import { Scene, Cameras, Types } from 'phaser';
+import { Scene } from 'phaser';
+import { Images, Audio } from '../constants/assets';
 
-const originalColor = 'rgba(0, 0, 0)';
-const alternateColor = 'rgb(255, 204, 0)';
-let isOriginalFontColor = true;
-let camera: Cameras.Scene2D.Camera;
-let cursor: Types.Input.Keyboard.CursorKeys;
+const ORIGINAL_COLOR = 'rgba(0, 0, 0)';
+const ALTERNATE_COLOR = 'rgb(255, 204, 0)';
 
 export default class GameMenu extends Scene {
+  private isOriginalFontColor = true;
+  private camera!: Phaser.Cameras.Scene2D.Camera;
+
   constructor() {
-    // Register Scene Name to access via this.scene.start()
     super({ key: 'GameMenu' });
   }
 
-  /**
-   * Preload the Scene's Assets
-   */
-  preload() {
-    this.load.image('gameMenu', '/assets/imgs/menuimage.jpg');
-    this.load.image('playBtnBg', '/assets/imgs/play_button_bg.png');
-    this.load.audio('gameMenuMusic', [
-      '/assets/audio/introMusic.mp3',
-      '/assets/audio/introMusic.ogg',
-    ]);
+  preload(): void {
+    this.load.image(Images.MENU_IMAGE.key, Images.MENU_IMAGE.path);
+    this.load.image(Images.PLAY_BTN_BG.key, Images.PLAY_BTN_BG.path);
+    this.load.audio(Audio.INTRO_MUSIC.key, Audio.INTRO_MUSIC.path);
   }
 
-  create() {
-    // cursor & camera settings
-    cursor = this.input.keyboard.createCursorKeys();
-    camera = this.cameras.main;
-    camera.useBounds = true;
-    /**
-     * Despite not existing on Cameras.Scene2D.Camera, _bounds
-     * is needed for the SICK ASS PANNING ANIMATION to happen
-     */
-    // @ts-ignore
-    camera._bounds.height = 1100;
+  create(): void {
+    this.isOriginalFontColor = true;
+
+    // Camera settings
+    this.camera = this.cameras.main;
+    this.camera.useBounds = true;
+    this.camera.setBounds(0, 0, 800, 1100);
 
     // Intro Music
-    const music = this.sound.add('gameMenuMusic');
+    const music = this.sound.add(Audio.INTRO_MUSIC.key);
     music.play({ volume: 0.5, loop: true });
 
     // Background Image
-    this.add.sprite(400, 591, 'gameMenu');
+    this.add.sprite(400, 591, Images.MENU_IMAGE.key);
 
     // Game Title
     this.add.text(195, 725, 'BATMAN: STREETS OF GOTHAM', {
-      color: alternateColor,
-      fontSize: 30,
+      color: ALTERNATE_COLOR,
+      fontSize: '30px',
       fontStyle: 'bold',
       backgroundColor: 'black',
     });
 
     // Start Button
-    const startButton = this.add.image(400, 850, 'playBtnBg').setInteractive();
+    const startButton = this.add
+      .image(400, 850, Images.PLAY_BTN_BG.key)
+      .setInteractive();
     const startButtonText = this.add
       .text(330, 835, 'S T A R T', {
-        color: originalColor,
-        fontSize: 30,
+        color: ORIGINAL_COLOR,
+        fontSize: '30px',
         fontStyle: 'bold',
       })
       .setInteractive();
 
-    // startButton settings
-    startButton.on('pointerdown', () => {
-      this.scene.start('LevelOne');
+    const startGame = () => {
+      this.scene.start('LevelSelect');
       music.stop();
-    });
+    };
 
-    // startButtonText settings
-    startButtonText.on('pointerdown', () => {
-      this.scene.start('LevelOne');
-      music.stop();
-    });
+    startButton.on('pointerdown', startGame);
+    startButtonText.on('pointerdown', startGame);
 
     // Start Button Text Animation
-    setInterval(() => {
-      if (isOriginalFontColor) startButtonText.setColor(alternateColor);
-      else startButtonText.setColor(originalColor);
-
-      isOriginalFontColor = !isOriginalFontColor;
-    }, 600);
+    this.time.addEvent({
+      delay: 600,
+      loop: true,
+      callback: () => {
+        if (this.isOriginalFontColor) startButtonText.setColor(ALTERNATE_COLOR);
+        else startButtonText.setColor(ORIGINAL_COLOR);
+        this.isOriginalFontColor = !this.isOriginalFontColor;
+      },
+    });
   }
 
-  update() {
-    // THE AWESOME PAN DOWN
-    camera.scrollY += 3;
+  update(): void {
+    // Pan-down animation
+    this.camera.scrollY += 3;
   }
 }
