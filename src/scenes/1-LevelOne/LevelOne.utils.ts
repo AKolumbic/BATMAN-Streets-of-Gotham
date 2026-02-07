@@ -2,13 +2,12 @@ export function getSceneAssets(load: Phaser.Loader.LoaderPlugin) {
   load.image('starry-night', './assets/imgs/starry-night.png');
   load.image('background', './assets/imgs/background.png');
   load.image('foreground', './assets/imgs/gc-buildings.png');
-  load.image('void', './assets/imgs/Solid_black.png');
   load.image('ground', './assets/imgs/blk-ground.png');
   load.image('platform', './assets/imgs/sml-platform.png');
   load.image('batarang', './assets/imgs/batarang.png');
   load.spritesheet('stand', './assets/imgs/stand.png', {
-    frameWidth: 41.8,
-    frameHeight: 55,
+    frameWidth: 41,
+    frameHeight: 53,
   });
   load.spritesheet('run-left', './assets/imgs/run-left.png', {
     frameWidth: 57,
@@ -27,8 +26,8 @@ export function getSceneAssets(load: Phaser.Loader.LoaderPlugin) {
     frameHeight: 50,
   });
   load.spritesheet('crouch', './assets/imgs/crouch.png', {
-    frameWidth: 57,
-    frameHeight: 50,
+    frameWidth: 60,
+    frameHeight: 47,
   });
   load.spritesheet('punch', './assets/imgs/punch.png', {
     frameWidth: 52,
@@ -38,17 +37,20 @@ export function getSceneAssets(load: Phaser.Loader.LoaderPlugin) {
     frameWidth: 52,
     frameHeight: 50,
   });
+  load.spritesheet('enemy', './assets/imgs/enemy.png', {
+    frameWidth: 221,
+    frameHeight: 226,
+  });
   load.audio('gameMusic', [
     './assets/audio/12 Introduce a Little Anarchy.mp3',
-    './assets/aduio/12 Introduce a Little Anarchy.ogg',
+    './assets/audio/12 Introduce a Little Anarchy.ogg',
   ]);
 }
 
 export function createPlatforms(
-  platforms: Phaser.Physics.Arcade.StaticGroup,
   physics: Phaser.Physics.Arcade.ArcadePhysics
-) {
-  platforms = physics.add.staticGroup();
+): Phaser.Physics.Arcade.StaticGroup {
+  const platforms = physics.add.staticGroup();
 
   //FLOOR
   platforms.create(300, 600, 'ground').setScale(5).refreshBody();

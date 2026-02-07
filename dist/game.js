@@ -241541,7 +241541,10 @@
   })();
 
   var __webpack_exports__AUTO = __webpack_exports__.B7;
+  var __webpack_exports__Animations = __webpack_exports__.FK;
   var __webpack_exports__Game = __webpack_exports__.lA;
+  var __webpack_exports__Geom = __webpack_exports__.v6;
+  var __webpack_exports__Input = __webpack_exports__.II;
   var __webpack_exports__Scale = __webpack_exports__.Ci;
   var __webpack_exports__Scene = __webpack_exports__.xs;
 
@@ -241640,14 +241643,18 @@
               _this.scene.start('LevelOne');
               music.stop();
           });
-          // Start Button Text Animation
-          setInterval(function () {
-              if (isOriginalFontColor)
-                  startButtonText.setColor(alternateColor);
-              else
-                  startButtonText.setColor(originalColor);
-              isOriginalFontColor = !isOriginalFontColor;
-          }, 600);
+          // Start Button Text Animation (uses Phaser timer so it auto-cleans on scene shutdown)
+          this.time.addEvent({
+              delay: 600,
+              loop: true,
+              callback: function () {
+                  if (isOriginalFontColor)
+                      startButtonText.setColor(alternateColor);
+                  else
+                      startButtonText.setColor(originalColor);
+                  isOriginalFontColor = !isOriginalFontColor;
+              },
+          });
       };
       GameMenu.prototype.update = function () {
           // THE AWESOME PAN DOWN
@@ -241656,116 +241663,115 @@
       return GameMenu;
   }(__webpack_exports__Scene));
 
-  function bindControls(animationManager) {
-      animationManager.create({
-          key: 'left',
-          frames: animationManager.generateFrameNumbers('run-left', {
-              start: 0,
-              end: 18,
-          }),
-          frameRate: 10,
-          repeat: -1,
-      });
-      animationManager.create({
+  /**
+   * Register all sprite animations with the Phaser animation manager.
+   * Safe to call multiple times (skips if animations already exist).
+   */
+  function registerAnimations(anims) {
+      // Skip if already registered (animations are global, persist across scene restarts)
+      if (anims.exists('stand'))
+          return;
+      // Idle / stand — 15 frames (621px / 41px = 15), looping
+      anims.create({
           key: 'stand',
-          frames: animationManager.generateFrameNumbers('stand', {
-              start: 0,
-              end: 16,
-          }),
-          frameRate: 5,
+          frames: anims.generateFrameNumbers('stand', { start: 0, end: 14 }),
+          frameRate: 8,
+          repeat: -1,
       });
-      animationManager.create({
+      // Run right — 19 frames (950px / 50px = 19), looping
+      anims.create({
           key: 'right',
-          frames: animationManager.generateFrameNumbers('run-right', {
-              start: 0,
-              end: 18,
-          }),
-          frameRate: 10,
+          frames: anims.generateFrameNumbers('run-right', { start: 0, end: 18 }),
+          frameRate: 12,
           repeat: -1,
       });
-      animationManager.create({
+      // Run left — 19 frames, looping
+      anims.create({
+          key: 'left',
+          frames: anims.generateFrameNumbers('run-left', { start: 0, end: 18 }),
+          frameRate: 12,
+          repeat: -1,
+      });
+      // Jump right — 3 frames (174px / 57px = 3), looping while airborne
+      anims.create({
           key: 'up',
-          frames: animationManager.generateFrameNumbers('jump', { start: 0, end: 2 }),
-          frameRate: 1,
+          frames: anims.generateFrameNumbers('jump', { start: 0, end: 2 }),
+          frameRate: 4,
           repeat: -1,
       });
-      animationManager.create({
+      // Jump left — 3 frames, looping while airborne
+      anims.create({
           key: 'up-left',
-          frames: animationManager.generateFrameNumbers('jump-left', {
-              start: 0,
-              end: 2,
-          }),
-          frameRate: 1,
+          frames: anims.generateFrameNumbers('jump-left', { start: 0, end: 2 }),
+          frameRate: 4,
           repeat: -1,
       });
-      animationManager.create({
+      // Crouch — 4 frames (240px / 60px = 4), play once and hold last frame
+      anims.create({
+          key: 'crouch',
+          frames: anims.generateFrameNumbers('crouch', { start: 0, end: 3 }),
+          frameRate: 8,
+          repeat: 0,
+      });
+      // Punch right — 11 frames (572px / 52px = 11), play once
+      anims.create({
           key: 'punch',
-          frames: animationManager.generateFrameNumbers('punch', {
-              start: 0,
-              end: 10,
-          }),
-          frameRate: 10,
+          frames: anims.generateFrameNumbers('punch', { start: 0, end: 10 }),
+          frameRate: 15,
+          repeat: 0,
+      });
+      // Punch left — 11 frames, play once
+      anims.create({
+          key: 'punch-left',
+          frames: anims.generateFrameNumbers('punch-left', { start: 0, end: 10 }),
+          frameRate: 15,
+          repeat: 0,
+      });
+      // --- Enemy animations ---
+      // Enemy walk — bottom half of spritesheet (frames 8-15), looping
+      anims.create({
+          key: 'enemy-walk',
+          frames: anims.generateFrameNumbers('enemy', { start: 8, end: 15 }),
+          frameRate: 8,
           repeat: -1,
       });
-      animationManager.create({
-          key: 'punch-left',
-          frames: animationManager.generateFrameNumbers('punch-left', {
-              start: 0,
-              end: 10,
-          }),
+      // Enemy punch — top half of spritesheet (frames 0-7), play once
+      anims.create({
+          key: 'enemy-punch',
+          frames: anims.generateFrameNumbers('enemy', { start: 0, end: 7 }),
           frameRate: 10,
-          repeat: -1,
+          repeat: 0,
       });
   }
-  function controlPlayerCharacter(cursor, character) {
-      if (cursor.left.isDown) {
-          character.setVelocityX(-160);
-          character.play('left');
-      }
-      else if (cursor.right.isDown) {
-          character.setVelocityX(160);
-          character.play('right');
-      }
-      // else if (cursor.space.duration >= 80 && count < 60) {
-      //   if (cursor.left.isDown) {
-      //     character.play('punch-left');
-      //   }
-      //   character.play('punch');
-      //   count += 1;
-      // } else {
-      //   character.setVelocityX(0);
-      //   // cursor.space.duration = 0; // reset space.duration so action 'punch' will stop
-      //   // count = 0; // reset count so action can be reactivate
-      //   character.play('stand');
-      // }
-      if (cursor.up.isDown) {
-          character.play('up');
-          if (character.body.touching.down) {
-              character.setVelocityY(-400);
-          }
-      }
-      if (!character.body.touching.down) {
-          character.play('up');
-          if (cursor.left.isDown) {
-              character.play('up-left');
-          }
-      }
-      if (cursor.up.isDown && cursor.left.isDown) {
-          character.play('up-left');
-      }
+  /**
+   * Creates and returns the key bindings object for the arcade control scheme.
+   * Arrow keys + space via createCursorKeys(), plus WASD and number keys.
+   */
+  function createInputKeys(scene) {
+      var cursors = scene.input.keyboard.createCursorKeys();
+      var keys = scene.input.keyboard.addKeys({
+          W: __webpack_exports__Input.Keyboard.KeyCodes.W,
+          A: __webpack_exports__Input.Keyboard.KeyCodes.A,
+          S: __webpack_exports__Input.Keyboard.KeyCodes.S,
+          D: __webpack_exports__Input.Keyboard.KeyCodes.D,
+          ONE: __webpack_exports__Input.Keyboard.KeyCodes.ONE,
+          TWO: __webpack_exports__Input.Keyboard.KeyCodes.TWO,
+          THREE: __webpack_exports__Input.Keyboard.KeyCodes.THREE,
+          FOUR: __webpack_exports__Input.Keyboard.KeyCodes.FOUR,
+      });
+      return { cursors: cursors, keys: keys };
   }
 
   function getSceneAssets(load) {
       load.image('starry-night', './assets/imgs/starry-night.png');
       load.image('background', './assets/imgs/background.png');
       load.image('foreground', './assets/imgs/gc-buildings.png');
-      load.image('void', './assets/imgs/Solid_black.png');
       load.image('ground', './assets/imgs/blk-ground.png');
       load.image('platform', './assets/imgs/sml-platform.png');
       load.image('batarang', './assets/imgs/batarang.png');
       load.spritesheet('stand', './assets/imgs/stand.png', {
-          frameWidth: 41.8,
-          frameHeight: 55,
+          frameWidth: 41,
+          frameHeight: 53,
       });
       load.spritesheet('run-left', './assets/imgs/run-left.png', {
           frameWidth: 57,
@@ -241784,8 +241790,8 @@
           frameHeight: 50,
       });
       load.spritesheet('crouch', './assets/imgs/crouch.png', {
-          frameWidth: 57,
-          frameHeight: 50,
+          frameWidth: 60,
+          frameHeight: 47,
       });
       load.spritesheet('punch', './assets/imgs/punch.png', {
           frameWidth: 52,
@@ -241795,13 +241801,17 @@
           frameWidth: 52,
           frameHeight: 50,
       });
+      load.spritesheet('enemy', './assets/imgs/enemy.png', {
+          frameWidth: 221,
+          frameHeight: 226,
+      });
       load.audio('gameMusic', [
           './assets/audio/12 Introduce a Little Anarchy.mp3',
-          './assets/aduio/12 Introduce a Little Anarchy.ogg',
+          './assets/audio/12 Introduce a Little Anarchy.ogg',
       ]);
   }
-  function createPlatforms(platforms, physics) {
-      platforms = physics.add.staticGroup();
+  function createPlatforms(physics) {
+      var platforms = physics.add.staticGroup();
       //FLOOR
       platforms.create(300, 600, 'ground').setScale(5).refreshBody();
       //FIRST PLATFORMS
@@ -241852,63 +241862,607 @@
       return platforms;
   }
 
-  var Batman;
-  var cursor;
-  // let batarang: Phaser.Physics.Arcade.Group;
-  var platforms;
-  // let scoreText;
-  // function collectBats(batarang) {
-  //   batarang.disableBody(true, true);
-  //   score += 10;
-  //   scoreText.setText('Score: ' + score);
-  // }
+  var BatmanState;
+  (function (BatmanState) {
+      BatmanState["IDLE"] = "IDLE";
+      BatmanState["RUNNING"] = "RUNNING";
+      BatmanState["JUMPING"] = "JUMPING";
+      BatmanState["FALLING"] = "FALLING";
+      BatmanState["PUNCHING"] = "PUNCHING";
+      BatmanState["CROUCHING"] = "CROUCHING";
+  })(BatmanState || (BatmanState = {}));
+  var Batman = /** @class */ (function () {
+      function Batman(config) {
+          var _this = this;
+          this.state = BatmanState.IDLE;
+          this.facingRight = true;
+          this.isInvulnerable = false;
+          this.score = 0;
+          this.invulnerabilityTimer = null;
+          this.flickerTimer = null;
+          this.scene = config.scene;
+          this.maxHp = 5;
+          this.hp = this.maxHp;
+          // Create physics sprite
+          this.sprite = config.scene.physics.add
+              .sprite(config.x, config.y, 'stand')
+              .setScale(1.15);
+          this.sprite.setCollideWorldBounds(true);
+          this.sprite.body.setGravityY(Batman.EXTRA_GRAVITY);
+          // Collide with platforms
+          config.scene.physics.add.collider(this.sprite, config.platforms);
+          // Listen for punch animation completion
+          this.sprite.on(__webpack_exports__Animations.Events.ANIMATION_COMPLETE, function (anim) {
+              if (anim.key === 'punch' || anim.key === 'punch-left') {
+                  _this.state = BatmanState.IDLE;
+              }
+          });
+      }
+      Batman.prototype.update = function (cursors, keys) {
+          var onGround = this.sprite.body.touching.down;
+          // Handle state transitions based on physics
+          if (this.state === BatmanState.JUMPING && this.sprite.body.velocity.y > 0) {
+              this.state = BatmanState.FALLING;
+          }
+          if ((this.state === BatmanState.FALLING || this.state === BatmanState.JUMPING) &&
+              onGround) {
+              this.state = BatmanState.IDLE;
+          }
+          // Punching locks out other actions until animation completes
+          if (this.state === BatmanState.PUNCHING) {
+              this.sprite.setVelocityX(0);
+              // Animation is already playing; wait for ANIMATION_COMPLETE
+              return;
+          }
+          // --- Input handling ---
+          var leftDown = cursors.left.isDown || keys.A.isDown;
+          var rightDown = cursors.right.isDown || keys.D.isDown;
+          var jumpDown = cursors.up.isDown || cursors.space.isDown || keys.W.isDown;
+          var crouchDown = cursors.down.isDown || keys.S.isDown;
+          var punchDown = keys.ONE.isDown;
+          // Punch (only when grounded — PUNCHING state already returned above)
+          if (punchDown && onGround) {
+              this.state = BatmanState.PUNCHING;
+              this.sprite.setVelocityX(0);
+              var punchAnim = this.facingRight ? 'punch' : 'punch-left';
+              this.sprite.play(punchAnim);
+              return;
+          }
+          // Jump (only when grounded)
+          if (jumpDown && onGround) {
+              this.state = BatmanState.JUMPING;
+              this.sprite.setVelocityY(Batman.JUMP_VELOCITY);
+          }
+          // Horizontal movement (allowed during all states except punching)
+          if (leftDown) {
+              this.sprite.setVelocityX(-Batman.MOVE_SPEED);
+              this.facingRight = false;
+              if (onGround && this.state !== BatmanState.JUMPING) {
+                  this.state = BatmanState.RUNNING;
+              }
+          }
+          else if (rightDown) {
+              this.sprite.setVelocityX(Batman.MOVE_SPEED);
+              this.facingRight = true;
+              if (onGround && this.state !== BatmanState.JUMPING) {
+                  this.state = BatmanState.RUNNING;
+              }
+          }
+          else if (onGround) {
+              this.sprite.setVelocityX(0);
+              if (this.state !== BatmanState.JUMPING &&
+                  this.state !== BatmanState.CROUCHING) {
+                  // Crouch
+                  if (crouchDown) {
+                      this.state = BatmanState.CROUCHING;
+                  }
+                  else {
+                      this.state = BatmanState.IDLE;
+                  }
+              }
+          }
+          // Release crouch
+          if (this.state === BatmanState.CROUCHING && !crouchDown) {
+              this.state = BatmanState.IDLE;
+          }
+          // --- Animation selection ---
+          this.playAnimation();
+      };
+      Batman.prototype.playAnimation = function () {
+          var _a;
+          var currentKey = (_a = this.sprite.anims.currentAnim) === null || _a === void 0 ? void 0 : _a.key;
+          switch (this.state) {
+              case BatmanState.IDLE:
+                  if (currentKey !== 'stand') {
+                      this.sprite.play('stand');
+                  }
+                  break;
+              case BatmanState.RUNNING:
+                  if (this.facingRight) {
+                      this.sprite.play('right', true);
+                  }
+                  else {
+                      this.sprite.play('left', true);
+                  }
+                  break;
+              case BatmanState.JUMPING:
+              case BatmanState.FALLING:
+                  if (this.facingRight) {
+                      this.sprite.play('up', true);
+                  }
+                  else {
+                      this.sprite.play('up-left', true);
+                  }
+                  break;
+              case BatmanState.CROUCHING:
+                  // Play once and hold last frame — check by key to prevent restart loop
+                  if (currentKey !== 'crouch') {
+                      this.sprite.play('crouch');
+                  }
+                  break;
+              // PUNCHING animation is triggered directly in update(), not here
+          }
+      };
+      Batman.prototype.takeDamage = function (amount, enemyX) {
+          var _this = this;
+          if (this.isInvulnerable || this.hp <= 0)
+              return;
+          this.hp = Math.max(0, this.hp - amount);
+          this.isInvulnerable = true;
+          // Knockback away from enemy
+          var knockbackDir = this.sprite.x < enemyX ? -1 : 1;
+          this.sprite.setVelocityX(Batman.KNOCKBACK_X * knockbackDir);
+          this.sprite.setVelocityY(Batman.KNOCKBACK_Y);
+          this.state = BatmanState.FALLING;
+          // Flicker effect during i-frames
+          this.flickerTimer = this.scene.time.addEvent({
+              delay: 80,
+              repeat: Math.floor(Batman.INVULNERABILITY_MS / 80),
+              callback: function () {
+                  _this.sprite.setAlpha(_this.sprite.alpha === 1 ? 0.3 : 1);
+              },
+          });
+          // End invulnerability
+          this.invulnerabilityTimer = this.scene.time.delayedCall(Batman.INVULNERABILITY_MS, function () {
+              _this.isInvulnerable = false;
+              _this.sprite.setAlpha(1);
+              if (_this.flickerTimer) {
+                  _this.flickerTimer.destroy();
+                  _this.flickerTimer = null;
+              }
+          });
+      };
+      /**
+       * Returns a rectangle representing the punch hitbox
+       * in world coordinates, or null if not punching.
+       */
+      Batman.prototype.getPunchHitbox = function () {
+          if (this.state !== BatmanState.PUNCHING)
+              return null;
+          var punchRange = 40;
+          var punchWidth = 30;
+          var punchHeight = 30;
+          var x = this.facingRight
+              ? this.sprite.x + punchRange
+              : this.sprite.x - punchRange - punchWidth;
+          var y = this.sprite.y - punchHeight / 2;
+          return new __webpack_exports__Geom.Rectangle(x, y, punchWidth, punchHeight);
+      };
+      Batman.prototype.isDead = function () {
+          return this.hp <= 0;
+      };
+      Batman.prototype.destroy = function () {
+          if (this.invulnerabilityTimer)
+              this.invulnerabilityTimer.destroy();
+          if (this.flickerTimer)
+              this.flickerTimer.destroy();
+          this.sprite.destroy();
+      };
+      Batman.MOVE_SPEED = 160;
+      Batman.JUMP_VELOCITY = -400;
+      Batman.EXTRA_GRAVITY = 200;
+      Batman.INVULNERABILITY_MS = 1000;
+      Batman.KNOCKBACK_X = 200;
+      Batman.KNOCKBACK_Y = -150;
+      return Batman;
+  }());
+
+  var EnemyState;
+  (function (EnemyState) {
+      EnemyState["PATROL"] = "PATROL";
+      EnemyState["ATTACKING"] = "ATTACKING";
+      EnemyState["DEAD"] = "DEAD";
+  })(EnemyState || (EnemyState = {}));
+  var Enemy = /** @class */ (function () {
+      function Enemy(config) {
+          var _this = this;
+          this.state = EnemyState.PATROL;
+          this.isAlive = true;
+          this.attackCooldown = false;
+          this.hitStunned = false;
+          this.scene = config.scene;
+          this.maxHp = 3;
+          this.hp = this.maxHp;
+          this.patrolLeftBound = config.patrolLeftBound;
+          this.patrolRightBound = config.patrolRightBound;
+          this.facingRight = true;
+          // Create physics sprite
+          this.sprite = config.scene.physics.add
+              .sprite(config.x, config.y, 'enemy')
+              .setScale(0.4);
+          // Adjust the physics body to be smaller than the visual sprite
+          this.sprite.body.setSize(150, 200);
+          this.sprite.body.setOffset(35, 20);
+          this.sprite.setCollideWorldBounds(true);
+          this.sprite.body.setGravityY(200);
+          // Collide with platforms
+          config.scene.physics.add.collider(this.sprite, config.platforms);
+          // Start walking
+          this.sprite.play('enemy-walk', true);
+          this.sprite.setVelocityX(Enemy.PATROL_SPEED);
+          // Listen for attack animation completion
+          this.sprite.on(__webpack_exports__Animations.Events.ANIMATION_COMPLETE, function (anim) {
+              if (anim.key === 'enemy-punch' && _this.isAlive) {
+                  _this.state = EnemyState.PATROL;
+                  _this.sprite.play('enemy-walk', true);
+                  // Resume patrol movement in current facing direction
+                  var speed = _this.facingRight
+                      ? Enemy.PATROL_SPEED
+                      : -Enemy.PATROL_SPEED;
+                  _this.sprite.setVelocityX(speed);
+              }
+          });
+      }
+      Enemy.prototype.update = function (batman) {
+          if (!this.isAlive || this.state === EnemyState.DEAD)
+              return;
+          // --- Patrol logic ---
+          if (this.state === EnemyState.PATROL) {
+              // Reverse direction at patrol bounds
+              if (this.sprite.x >= this.patrolRightBound) {
+                  this.facingRight = false;
+                  this.sprite.setVelocityX(-Enemy.PATROL_SPEED);
+                  this.sprite.setFlipX(true);
+              }
+              else if (this.sprite.x <= this.patrolLeftBound) {
+                  this.facingRight = true;
+                  this.sprite.setVelocityX(Enemy.PATROL_SPEED);
+                  this.sprite.setFlipX(false);
+              }
+              // Check if Batman is in attack range
+              var distX = Math.abs(this.sprite.x - batman.sprite.x);
+              var distY = Math.abs(this.sprite.y - batman.sprite.y);
+              if (distX < Enemy.ATTACK_RANGE && distY < 80 && !this.attackCooldown) {
+                  this.attack();
+              }
+          }
+          // --- Check if Batman's punch hits this enemy ---
+          var punchHitbox = batman.getPunchHitbox();
+          if (punchHitbox && this.isAlive && !this.hitStunned) {
+              var enemyBounds = this.sprite.getBounds();
+              if (__webpack_exports__Geom.Rectangle.Overlaps(punchHitbox, enemyBounds)) {
+                  this.takeDamage(1, batman);
+              }
+          }
+      };
+      Enemy.prototype.attack = function () {
+          var _this = this;
+          this.state = EnemyState.ATTACKING;
+          this.sprite.setVelocityX(0);
+          this.sprite.play('enemy-punch');
+          // Cooldown so the enemy doesn't spam attacks
+          this.attackCooldown = true;
+          this.scene.time.delayedCall(1500, function () {
+              _this.attackCooldown = false;
+          });
+      };
+      /**
+       * Check if Batman's body overlaps with this enemy's body.
+       * Called from the scene's overlap handler.
+       */
+      Enemy.prototype.handleBatmanOverlap = function (batman) {
+          if (!this.isAlive || batman.isInvulnerable || batman.isDead())
+              return;
+          batman.takeDamage(Enemy.DAMAGE_TO_BATMAN, this.sprite.x);
+      };
+      Enemy.prototype.takeDamage = function (amount, batman) {
+          var _this = this;
+          if (!this.isAlive || this.hitStunned)
+              return;
+          this.hp -= amount;
+          this.hitStunned = true;
+          // Flash red on hit
+          this.sprite.setTint(0xff0000);
+          this.scene.time.delayedCall(400, function () {
+              _this.hitStunned = false;
+              if (_this.isAlive)
+                  _this.sprite.clearTint();
+          });
+          if (this.hp <= 0) {
+              this.die(batman);
+          }
+      };
+      Enemy.prototype.die = function (batman) {
+          var _this = this;
+          this.isAlive = false;
+          this.state = EnemyState.DEAD;
+          batman.score += Enemy.SCORE_VALUE;
+          // Death effect: fade out and destroy
+          this.sprite.setVelocity(0, 0);
+          this.sprite.body.enable = false;
+          this.scene.tweens.add({
+              targets: this.sprite,
+              alpha: 0,
+              duration: 500,
+              onComplete: function () {
+                  _this.sprite.destroy();
+              },
+          });
+      };
+      Enemy.prototype.destroy = function () {
+          if (this.sprite && this.sprite.active) {
+              this.sprite.destroy();
+          }
+      };
+      Enemy.PATROL_SPEED = 60;
+      Enemy.ATTACK_RANGE = 100;
+      Enemy.DAMAGE_TO_BATMAN = 1;
+      Enemy.SCORE_VALUE = 100;
+      return Enemy;
+  }());
+
+  var HUD = /** @class */ (function () {
+      function HUD(scene, batman) {
+          this.scene = scene;
+          this.batman = batman;
+          // --- Health bar ---
+          // Label
+          this.healthLabel = scene.add
+              .text(HUD.BAR_X, HUD.BAR_Y - 16, 'HP', {
+              fontSize: '12px',
+              color: '#ffffff',
+              fontStyle: 'bold',
+          })
+              .setScrollFactor(0)
+              .setDepth(100);
+          // Background (dark)
+          this.healthBarBg = scene.add
+              .rectangle(HUD.BAR_X + HUD.BAR_WIDTH / 2, HUD.BAR_Y + HUD.BAR_HEIGHT / 2, HUD.BAR_WIDTH, HUD.BAR_HEIGHT, 0x333333)
+              .setScrollFactor(0)
+              .setDepth(100);
+          // Fill (red)
+          this.healthBarFill = scene.add
+              .rectangle(HUD.BAR_X + HUD.BAR_WIDTH / 2, HUD.BAR_Y + HUD.BAR_HEIGHT / 2, HUD.BAR_WIDTH, HUD.BAR_HEIGHT, 0xcc0000)
+              .setScrollFactor(0)
+              .setDepth(101);
+          // --- Score ---
+          this.scoreText = scene.add
+              .text(780, HUD.BAR_Y - 10, 'SCORE: 0', {
+              fontSize: '16px',
+              color: '#ffcc00',
+              fontStyle: 'bold',
+          })
+              .setOrigin(1, 0)
+              .setScrollFactor(0)
+              .setDepth(100);
+      }
+      HUD.prototype.update = function () {
+          // Update health bar fill width
+          var hpPercent = this.batman.hp / this.batman.maxHp;
+          var fillWidth = HUD.BAR_WIDTH * hpPercent;
+          this.healthBarFill.setSize(fillWidth, HUD.BAR_HEIGHT);
+          this.healthBarFill.setPosition(HUD.BAR_X + fillWidth / 2, HUD.BAR_Y + HUD.BAR_HEIGHT / 2);
+          // Change color based on HP level
+          if (hpPercent > 0.5) {
+              this.healthBarFill.setFillStyle(0xcc0000); // Red
+          }
+          else if (hpPercent > 0.25) {
+              this.healthBarFill.setFillStyle(0xff6600); // Orange
+          }
+          else {
+              this.healthBarFill.setFillStyle(0xff0000); // Bright red (critical)
+          }
+          // Update score
+          this.scoreText.setText('SCORE: ' + this.batman.score);
+      };
+      HUD.prototype.destroy = function () {
+          this.healthBarBg.destroy();
+          this.healthBarFill.destroy();
+          this.healthLabel.destroy();
+          this.scoreText.destroy();
+      };
+      HUD.BAR_X = 20;
+      HUD.BAR_Y = 20;
+      HUD.BAR_WIDTH = 150;
+      HUD.BAR_HEIGHT = 16;
+      return HUD;
+  }());
+
   var LevelOne = /** @class */ (function (_super) {
       __extends(LevelOne, _super);
       function LevelOne() {
-          return _super.call(this, { key: 'LevelOne' }) || this;
+          var _this = _super.call(this, { key: 'LevelOne' }) || this;
+          _this.enemies = [];
+          _this.gameOver = false;
+          _this.levelComplete = false;
+          return _this;
       }
       LevelOne.prototype.preload = function () {
           getSceneAssets(this.load);
       };
       LevelOne.prototype.create = function () {
-          // gameMusic settings
-          var gameMusic = this.sound.add('gameMusic');
-          gameMusic.play({ volume: 0.35, loop: true });
+          var _this = this;
+          this.gameOver = false;
+          this.levelComplete = false;
+          // Music
+          this.gameMusic = this.sound.add('gameMusic');
+          this.gameMusic.play({ volume: 0.35, loop: true });
+          // Parallax background layers
           this.add.image(1411, 185, 'starry-night');
           this.add.image(1411, 310, 'background');
           this.add.image(1411, 390, 'foreground');
-          cursor = this.input.keyboard.createCursorKeys();
-          // BATMAN
-          Batman = this.physics.add.sprite(100, 450, 'stand').setScale(1.15);
-          Batman.setCollideWorldBounds(true);
-          Batman.body.setGravityY(200);
-          Batman.play('stand');
-          bindControls(this.anims);
-          //PLATFORMS
-          platforms = createPlatforms(platforms, this.physics);
-          // //COLLECTABLES
-          // batarang = this.physics.add.group({
-          //   key: 'batarang',
-          //   repeat: 18,
-          //   setXY: { x: 50, y: 0, stepX: 150 },
-          // });
-          // batarang.children.iterate((child) =>
-          //   // @ts-ignore
-          //   child.setBounceY(Math.FloatBetween(0.2, 0.4))
-          // );
-          //PHYSICS
-          this.physics.add.collider(Batman, platforms);
-          // this.physics.add.collider(batarang, platforms);
+          // Register all animations (Batman + Enemy)
+          registerAnimations(this.anims);
+          // Input
+          var input = createInputKeys(this);
+          this.cursors = input.cursors;
+          this.keys = input.keys;
+          // Platforms
+          this.platforms = createPlatforms(this.physics);
+          // Batman
+          this.batman = new Batman({
+              scene: this,
+              x: 100,
+              y: 450,
+              platforms: this.platforms,
+          });
+          // Enemies — placed on ground and platforms
+          this.enemies = [
+              new Enemy({
+                  scene: this,
+                  x: 600,
+                  y: 450,
+                  platforms: this.platforms,
+                  patrolLeftBound: 450,
+                  patrolRightBound: 750,
+              }),
+              new Enemy({
+                  scene: this,
+                  x: 1500,
+                  y: 450,
+                  platforms: this.platforms,
+                  patrolLeftBound: 1400,
+                  patrolRightBound: 1700,
+              }),
+              new Enemy({
+                  scene: this,
+                  x: 2300,
+                  y: 100,
+                  platforms: this.platforms,
+                  patrolLeftBound: 2200,
+                  patrolRightBound: 2550,
+              }),
+          ];
+          // Batman-Enemy overlap for contact damage
+          this.enemies.forEach(function (enemy) {
+              _this.physics.add.overlap(_this.batman.sprite, enemy.sprite, function () {
+                  enemy.handleBatmanOverlap(_this.batman);
+              }, undefined, _this);
+          });
+          // World bounds
           this.physics.world.bounds.width = 2822;
-          // this.physics.add.overlap(Batman, batarang, collectBats, null, this);
-          //CAMERA
-          // set bounds so the camera won't go outside the game world
+          // Camera
           this.cameras.main.setBounds(0, 0, 2822, 384);
-          // make the camera follow the player
-          this.cameras.main.startFollow(Batman);
+          this.cameras.main.startFollow(this.batman.sprite);
+          // HUD
+          this.hud = new HUD(this, this.batman);
       };
       LevelOne.prototype.update = function () {
-          controlPlayerCharacter(cursor, Batman);
+          var _this = this;
+          if (this.gameOver || this.levelComplete)
+              return;
+          // Update Batman
+          this.batman.update(this.cursors, this.keys);
+          // Update enemies
+          this.enemies.forEach(function (enemy) {
+              enemy.update(_this.batman);
+          });
+          // Update HUD
+          this.hud.update();
+          // Check for game over
+          if (this.batman.isDead()) {
+              this.handleGameOver();
+          }
+          // Check for win — all enemies defeated
+          if (this.enemies.every(function (e) { return !e.isAlive; })) {
+              this.handleWin();
+          }
+      };
+      LevelOne.prototype.handleWin = function () {
+          var _this = this;
+          this.levelComplete = true;
+          var centerX = this.cameras.main.scrollX + 400;
+          var centerY = this.cameras.main.scrollY + 150;
+          this.add
+              .text(centerX, centerY, 'GOTHAM IS SAFE', {
+              fontSize: '42px',
+              color: '#ffcc00',
+              fontStyle: 'bold',
+              backgroundColor: 'rgba(0,0,0,0.8)',
+              padding: { x: 20, y: 10 },
+          })
+              .setOrigin(0.5)
+              .setDepth(200);
+          this.add
+              .text(centerX, centerY + 50, 'SCORE: ' + this.batman.score, {
+              fontSize: '24px',
+              color: '#ffffff',
+              backgroundColor: 'rgba(0,0,0,0.6)',
+              padding: { x: 10, y: 5 },
+          })
+              .setOrigin(0.5)
+              .setDepth(200);
+          var restartText = this.add
+              .text(centerX, centerY + 100, 'Press SPACE to play again', {
+              fontSize: '18px',
+              color: '#ffffff',
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              padding: { x: 10, y: 5 },
+          })
+              .setOrigin(0.5)
+              .setDepth(200);
+          this.time.addEvent({
+              delay: 500,
+              loop: true,
+              callback: function () {
+                  restartText.setAlpha(restartText.alpha === 1 ? 0.3 : 1);
+              },
+          });
+          this.input.keyboard.once('keydown-SPACE', function () {
+              _this.gameMusic.stop();
+              _this.scene.restart();
+          });
+      };
+      LevelOne.prototype.handleGameOver = function () {
+          var _this = this;
+          this.gameOver = true;
+          this.batman.sprite.setVelocity(0, 0);
+          this.batman.sprite.setTint(0xff0000);
+          // Display game over text
+          var centerX = this.cameras.main.scrollX + 400;
+          var centerY = this.cameras.main.scrollY + 200;
+          this.add
+              .text(centerX, centerY, 'GAME OVER', {
+              fontSize: '48px',
+              color: '#ff0000',
+              fontStyle: 'bold',
+              backgroundColor: 'rgba(0,0,0,0.7)',
+              padding: { x: 20, y: 10 },
+          })
+              .setOrigin(0.5)
+              .setDepth(200);
+          var restartText = this.add
+              .text(centerX, centerY + 60, 'Press SPACE to restart', {
+              fontSize: '20px',
+              color: '#ffffff',
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              padding: { x: 10, y: 5 },
+          })
+              .setOrigin(0.5)
+              .setDepth(200);
+          // Flicker the restart text
+          this.time.addEvent({
+              delay: 500,
+              loop: true,
+              callback: function () {
+                  restartText.setAlpha(restartText.alpha === 1 ? 0.3 : 1);
+              },
+          });
+          // Listen for restart
+          this.input.keyboard.once('keydown-SPACE', function () {
+              _this.gameMusic.stop();
+              _this.scene.restart();
+          });
       };
       return LevelOne;
   }(__webpack_exports__Scene));

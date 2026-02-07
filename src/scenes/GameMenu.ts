@@ -73,13 +73,16 @@ export default class GameMenu extends Scene {
       music.stop();
     });
 
-    // Start Button Text Animation
-    setInterval(() => {
-      if (isOriginalFontColor) startButtonText.setColor(alternateColor);
-      else startButtonText.setColor(originalColor);
-
-      isOriginalFontColor = !isOriginalFontColor;
-    }, 600);
+    // Start Button Text Animation (uses Phaser timer so it auto-cleans on scene shutdown)
+    this.time.addEvent({
+      delay: 600,
+      loop: true,
+      callback: () => {
+        if (isOriginalFontColor) startButtonText.setColor(alternateColor);
+        else startButtonText.setColor(originalColor);
+        isOriginalFontColor = !isOriginalFontColor;
+      },
+    });
   }
 
   update() {

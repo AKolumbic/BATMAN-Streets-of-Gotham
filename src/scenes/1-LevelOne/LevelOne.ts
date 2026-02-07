@@ -1,80 +1,232 @@
-import { Scene, Types, Math } from 'phaser';
-import {
-  bindControls,
-  controlPlayerCharacter,
-} from '../../controls/controls.utils';
+import { Scene } from 'phaser';
+import { registerAnimations, createInputKeys } from '../../controls/controls.utils';
 import { getSceneAssets, createPlatforms } from './LevelOne.utils';
-
-let Batman: Types.Physics.Arcade.SpriteWithDynamicBody;
-let cursor: Types.Input.Keyboard.CursorKeys;
-// let batarang: Phaser.Physics.Arcade.Group;
-let platforms: Phaser.Physics.Arcade.StaticGroup;
-let score = 0;
-// let scoreText;
-
-// function collectBats(batarang) {
-//   batarang.disableBody(true, true);
-
-//   score += 10;
-//   scoreText.setText('Score: ' + score);
-// }
+import Batman from '../../entities/Batman';
+import Enemy from '../../entities/Enemy';
+import HUD from '../../ui/HUD';
 
 export default class LevelOne extends Scene {
+  private batman!: Batman;
+  private enemies: Enemy[] = [];
+  private hud!: HUD;
+  private platforms!: Phaser.Physics.Arcade.StaticGroup;
+  private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
+  private keys!: { [key: string]: Phaser.Input.Keyboard.Key };
+  private gameMusic!: Phaser.Sound.BaseSound;
+  private gameOver = false;
+  private levelComplete = false;
+
   constructor() {
     super({ key: 'LevelOne' });
   }
 
-  preload() {
+  preload(): void {
     getSceneAssets(this.load);
   }
 
-  create() {
-    // gameMusic settings
-    const gameMusic = this.sound.add('gameMusic');
-    gameMusic.play({ volume: 0.35, loop: true });
+  create(): void {
+    this.gameOver = false;
+    this.levelComplete = false;
 
+    // Music
+    this.gameMusic = this.sound.add('gameMusic');
+    this.gameMusic.play({ volume: 0.35, loop: true });
+
+    // Parallax background layers
     this.add.image(1411, 185, 'starry-night');
     this.add.image(1411, 310, 'background');
     this.add.image(1411, 390, 'foreground');
 
-    cursor = this.input.keyboard.createCursorKeys();
+    // Register all animations (Batman + Enemy)
+    registerAnimations(this.anims);
 
-    // BATMAN
-    Batman = this.physics.add.sprite(100, 450, 'stand').setScale(1.15);
-    Batman.setCollideWorldBounds(true);
-    Batman.body.setGravityY(200);
-    Batman.play('stand');
-    bindControls(this.anims);
+    // Input
+    const input = createInputKeys(this);
+    this.cursors = input.cursors;
+    this.keys = input.keys;
 
-    //PLATFORMS
-    platforms = createPlatforms(platforms, this.physics);
+    // Platforms
+    this.platforms = createPlatforms(this.physics);
 
-    // //COLLECTABLES
-    // batarang = this.physics.add.group({
-    //   key: 'batarang',
-    //   repeat: 18,
-    //   setXY: { x: 50, y: 0, stepX: 150 },
-    // });
+    // Batman
+    this.batman = new Batman({
+      scene: this,
+      x: 100,
+      y: 450,
+      platforms: this.platforms,
+    });
 
-    // batarang.children.iterate((child) =>
-    //   // @ts-ignore
-    //   child.setBounceY(Math.FloatBetween(0.2, 0.4))
-    // );
+    // Enemies — placed on ground and platforms
+    this.enemies = [
+      new Enemy({
+        scene: this,
+        x: 600,
+        y: 450,
+        platforms: this.platforms,
+        patrolLeftBound: 450,
+        patrolRightBound: 750,
+      }),
+      new Enemy({
+        scene: this,
+        x: 1500,
+        y: 450,
+        platforms: this.platforms,
+        patrolLeftBound: 1400,
+        patrolRightBound: 1700,
+      }),
+      new Enemy({
+        scene: this,
+        x: 2300,
+        y: 100,
+        platforms: this.platforms,
+        patrolLeftBound: 2200,
+        patrolRightBound: 2550,
+      }),
+    ];
 
-    //PHYSICS
-    this.physics.add.collider(Batman, platforms);
-    // this.physics.add.collider(batarang, platforms);
+    // Batman-Enemy overlap for contact damage
+    this.enemies.forEach((enemy) => {
+      this.physics.add.overlap(
+        this.batman.sprite,
+        enemy.sprite,
+        () => {
+          enemy.handleBatmanOverlap(this.batman);
+        },
+        undefined,
+        this
+      );
+    });
+
+    // World bounds
     this.physics.world.bounds.width = 2822;
-    // this.physics.add.overlap(Batman, batarang, collectBats, null, this);
 
-    //CAMERA
-    // set bounds so the camera won't go outside the game world
+    // Camera
     this.cameras.main.setBounds(0, 0, 2822, 384);
-    // make the camera follow the player
-    this.cameras.main.startFollow(Batman);
+    this.cameras.main.startFollow(this.batman.sprite);
+
+    // HUD
+    this.hud = new HUD(this, this.batman);
   }
 
-  update() {
-    controlPlayerCharacter(cursor, Batman);
+  update(): void {
+    if (this.gameOver || this.levelComplete) return;
+
+    // Update Batman
+    this.batman.update(this.cursors, this.keys);
+
+    // Update enemies
+    this.enemies.forEach((enemy) => {
+      enemy.update(this.batman);
+    });
+
+    // Update HUD
+    this.hud.update();
+
+    // Check for game over
+    if (this.batman.isDead()) {
+      this.handleGameOver();
+    }
+
+    // Check for win — all enemies defeated
+    if (this.enemies.every((e) => !e.isAlive)) {
+      this.handleWin();
+    }
+  }
+
+  private handleWin(): void {
+    this.levelComplete = true;
+
+    const centerX = this.cameras.main.scrollX + 400;
+    const centerY = this.cameras.main.scrollY + 150;
+
+    this.add
+      .text(centerX, centerY, 'GOTHAM IS SAFE', {
+        fontSize: '42px',
+        color: '#ffcc00',
+        fontStyle: 'bold',
+        backgroundColor: 'rgba(0,0,0,0.8)',
+        padding: { x: 20, y: 10 },
+      })
+      .setOrigin(0.5)
+      .setDepth(200);
+
+    this.add
+      .text(centerX, centerY + 50, 'SCORE: ' + this.batman.score, {
+        fontSize: '24px',
+        color: '#ffffff',
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        padding: { x: 10, y: 5 },
+      })
+      .setOrigin(0.5)
+      .setDepth(200);
+
+    const restartText = this.add
+      .text(centerX, centerY + 100, 'Press SPACE to play again', {
+        fontSize: '18px',
+        color: '#ffffff',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        padding: { x: 10, y: 5 },
+      })
+      .setOrigin(0.5)
+      .setDepth(200);
+
+    this.time.addEvent({
+      delay: 500,
+      loop: true,
+      callback: () => {
+        restartText.setAlpha(restartText.alpha === 1 ? 0.3 : 1);
+      },
+    });
+
+    this.input.keyboard.once('keydown-SPACE', () => {
+      this.gameMusic.stop();
+      this.scene.restart();
+    });
+  }
+
+  private handleGameOver(): void {
+    this.gameOver = true;
+    this.batman.sprite.setVelocity(0, 0);
+    this.batman.sprite.setTint(0xff0000);
+
+    // Display game over text
+    const centerX = this.cameras.main.scrollX + 400;
+    const centerY = this.cameras.main.scrollY + 200;
+
+    this.add
+      .text(centerX, centerY, 'GAME OVER', {
+        fontSize: '48px',
+        color: '#ff0000',
+        fontStyle: 'bold',
+        backgroundColor: 'rgba(0,0,0,0.7)',
+        padding: { x: 20, y: 10 },
+      })
+      .setOrigin(0.5)
+      .setDepth(200);
+
+    const restartText = this.add
+      .text(centerX, centerY + 60, 'Press SPACE to restart', {
+        fontSize: '20px',
+        color: '#ffffff',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        padding: { x: 10, y: 5 },
+      })
+      .setOrigin(0.5)
+      .setDepth(200);
+
+    // Flicker the restart text
+    this.time.addEvent({
+      delay: 500,
+      loop: true,
+      callback: () => {
+        restartText.setAlpha(restartText.alpha === 1 ? 0.3 : 1);
+      },
+    });
+
+    // Listen for restart
+    this.input.keyboard.once('keydown-SPACE', () => {
+      this.gameMusic.stop();
+      this.scene.restart();
+    });
   }
 }
