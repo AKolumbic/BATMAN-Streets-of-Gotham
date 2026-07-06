@@ -1,11 +1,12 @@
 import { Scene } from 'phaser';
 import Button from '../ui/Button';
 import { LEVELS, LEVEL_ORDER } from '../data/levels';
+import { isUnlocked, loadProgress } from '../systems/Progress';
 
 /**
  * Level selection screen.
- * Displays all 8 episodes with noir titles. All episodes are unlocked.
- * Clicking an episode routes to EpisodeIntro, which then transitions to GameLevel.
+ * Displays all 8 episodes with noir titles. Sequential unlock via saved progress.
+ * Clicking an unlocked episode routes to EpisodeIntro, which then transitions to GameLevel.
  */
 export default class LevelSelect extends Scene {
   constructor() {
@@ -41,6 +42,8 @@ export default class LevelSelect extends Scene {
     const colWidth = 400;
     const rowHeight = 105;
 
+    const progress = loadProgress();
+
     LEVEL_ORDER.forEach((levelId, index) => {
       const level = LEVELS[levelId];
       const col = index % 2;
@@ -48,7 +51,11 @@ export default class LevelSelect extends Scene {
       const x = startX + col * colWidth;
       const y = startY + row * rowHeight;
 
-      const label = `EP. ${level.episode} \u2014 ${level.title}`;
+      const unlocked = isUnlocked(levelId, LEVEL_ORDER);
+      const result = progress.levels[levelId];
+      const label = unlocked
+        ? `EP. ${level.episode} \u2014 ${level.title}`
+        : `EP. ${level.episode} \u2014 ${level.title} (LOCKED)`;
 
       new Button({
         scene: this,
@@ -58,17 +65,31 @@ export default class LevelSelect extends Scene {
         width: 340,
         height: 80,
         fontSize: '16px',
-        bgColor: 0x1a2a3a,
+        bgColor: unlocked ? 0x1a2a3a : 0x222222,
+        color: unlocked ? '#ffffff' : '#555555',
+        disabled: !unlocked,
         onClick: () => {
-          this.scene.start('EpisodeIntro', { levelId });
+          if (unlocked) {
+            this.scene.start('EpisodeIntro', { levelId });
+          }
         },
       });
+
+      if (result?.completed) {
+        this.add
+          .text(x, y + 50, `BEST: ${result.bestScore}`, {
+            fontSize: '12px',
+            color: '#888888',
+          })
+          .setOrigin(0.5)
+          .setDepth(51);
+      }
 
       // Episode number badge
       this.add
         .text(x - 140, y - 15, `${level.episode}`, {
           fontSize: '32px',
-          color: '#ffcc00',
+          color: unlocked ? '#ffcc00' : '#555555',
           fontStyle: 'bold',
         })
         .setOrigin(0.5)

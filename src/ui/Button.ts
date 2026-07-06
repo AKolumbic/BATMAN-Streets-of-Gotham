@@ -14,6 +14,7 @@ export interface ButtonConfig {
   fontSize?: string;
   color?: string;
   bgColor?: number;
+  disabled?: boolean;
   onClick: () => void;
 }
 
@@ -34,6 +35,7 @@ export default class Button {
       fontSize = '20px',
       color = '#ffffff',
       bgColor = 0x333333,
+      disabled = false,
       onClick,
     } = config;
 
@@ -46,7 +48,9 @@ export default class Button {
       this.bg = scene.add.rectangle(0, 0, width, height, bgColor);
     }
 
-    this.bg.setInteractive({ useHandCursor: true });
+    if (!disabled) {
+      this.bg.setInteractive({ useHandCursor: true });
+    }
 
     // Label
     this.label = scene.add
@@ -61,6 +65,10 @@ export default class Button {
     this.container = scene.add
       .container(x, y, [this.bg, this.label])
       .setDepth(50);
+
+    if (disabled) {
+      return;
+    }
 
     // Click handler
     this.bg.on('pointerdown', onClick);
