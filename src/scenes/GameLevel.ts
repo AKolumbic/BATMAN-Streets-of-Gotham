@@ -196,6 +196,7 @@ export default class GameLevel extends Scene {
     // Check for game over
     if (this.batman.isDead()) {
       this.handleGameOver();
+      return;
     }
 
     // Check for win — all enemies defeated
@@ -205,6 +206,8 @@ export default class GameLevel extends Scene {
   }
 
   private handleWin(): void {
+    if (this.gameOver || this.levelComplete) return;
+
     this.levelComplete = true;
     this.gameMusic.stop();
 
@@ -221,6 +224,8 @@ export default class GameLevel extends Scene {
   }
 
   private handleGameOver(): void {
+    if (this.gameOver || this.levelComplete) return;
+
     this.gameOver = true;
     this.batman.sprite.setVelocity(0, 0);
     this.batman.sprite.setTint(0xff0000);
