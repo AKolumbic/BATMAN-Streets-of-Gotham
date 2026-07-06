@@ -16,21 +16,20 @@ export default class GangsterRanged extends Enemy {
   private static readonly RECHARGE_MS = 2500;
 
   constructor(config: EnemyConfig) {
-    super(config);
-
-    this.walkAnimKey = 'gangster3-walk-anim';
-    this.attackAnimKey = 'gangster3-shot-anim';
+    super(config, {
+      textureKey: 'gangster3-idle',
+      walkAnimKey: 'gangster3-walk-anim',
+      attackAnimKey: 'gangster3-shot-anim',
+      scale: 0.8,
+      bodySize: { width: 60, height: 100 },
+      bodyOffset: { x: 34, y: 28 },
+    });
 
     // Bullet pool
     this.bullets = config.scene.physics.add.group({
       maxSize: 5,
       allowGravity: false,
     });
-
-    // Re-start walk with the correct anim key
-    if (this.sprite.active) {
-      this.sprite.play(this.walkAnimKey, true);
-    }
   }
 
   protected override onAnimationComplete(anim: Animations.Animation): void {
@@ -47,21 +46,6 @@ export default class GangsterRanged extends Enemy {
       this.isRecharging = false;
       this.resumePatrol();
     }
-  }
-
-  protected override createSprite(
-    config: EnemyConfig
-  ): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody {
-    const sprite = config.scene.physics.add
-      .sprite(config.x, config.y, 'gangster3-idle')
-      .setScale(0.8) as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-
-    sprite.body.setSize(60, 100);
-    sprite.body.setOffset(34, 28);
-    sprite.setCollideWorldBounds(true);
-    sprite.body.setGravityY(200);
-
-    return sprite;
   }
 
   override update(batman: Batman): void {
