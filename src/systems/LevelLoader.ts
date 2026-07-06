@@ -47,6 +47,8 @@ export interface LevelData {
   music: string;
   player: { x: number; y: number };
   platforms: LevelPlatform[];
+  /** Full-width tiled floor; segments are generated to cover worldWidth. */
+  floor?: { texture: string; y: number; scale: number };
   enemies: LevelEnemy[];
   npcs: LevelNPC[];
 }
@@ -65,6 +67,41 @@ export function createPlatformsFromData(
   }
 
   return group;
+}
+
+/**
+ * Compute center x-positions for floor segments so scaled tiles of
+ * `textureWidth * scale` cover [0, worldWidth] with no gap.
+ */
+export function computeFloorSegmentCenters(
+  worldWidth: number,
+  textureWidth: number,
+  scale: number
+): number[] {
+  const segmentWidth = textureWidth * scale;
+  const count = Math.ceil(worldWidth / segmentWidth);
+  const centers: number[] = [];
+  for (let i = 0; i < count; i++) {
+    centers.push(i * segmentWidth + segmentWidth / 2);
+  }
+  return centers;
+}
+
+const GROUND_TEXTURE_WIDTH = 287; // blk-ground.png is 287x2 px
+
+export function createFloor(
+  physics: Phaser.Physics.Arcade.ArcadePhysics,
+  group: Phaser.Physics.Arcade.StaticGroup,
+  floor: { texture: string; y: number; scale: number },
+  worldWidth: number
+): void {
+  for (const cx of computeFloorSegmentCenters(
+    worldWidth,
+    GROUND_TEXTURE_WIDTH,
+    floor.scale
+  )) {
+    group.create(cx, floor.y, floor.texture).setScale(floor.scale).refreshBody();
+  }
 }
 
 /**
