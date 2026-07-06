@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 import Button from '../ui/Button';
+import { loadProgress, recordResult } from '../systems/Progress';
 
 /**
  * Displayed when a level is completed successfully.
@@ -24,6 +25,10 @@ export default class LevelComplete extends Scene {
       levelName = 'Unknown',
       levelId = 'level-01',
     } = data;
+
+    const previousBest = loadProgress().levels[levelId]?.bestScore ?? 0;
+    recordResult(levelId, score, rescued);
+    const isNewBest = score > previousBest;
 
     this.cameras.main.setBackgroundColor('#0f1a0f');
 
@@ -52,6 +57,16 @@ export default class LevelComplete extends Scene {
         fontStyle: 'bold',
       })
       .setOrigin(0.5);
+
+    if (isNewBest) {
+      this.add
+        .text(width / 2, height / 2 + 5, 'NEW BEST!', {
+          fontSize: '16px',
+          color: '#ffcc00',
+          fontStyle: 'bold',
+        })
+        .setOrigin(0.5);
+    }
 
     // Rescued count
     this.add
