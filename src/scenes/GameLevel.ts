@@ -5,6 +5,7 @@ import {
   LevelData,
   createPlatformsFromData,
   createBackgroundLayers,
+  createFloor,
 } from '../systems/LevelLoader';
 import ParallaxBackground from '../systems/ParallaxBackground';
 import { LEVELS } from '../data/levels';
@@ -96,6 +97,15 @@ export default class GameLevel extends Scene {
       this.physics,
       this.levelData.platforms
     );
+
+    if (this.levelData.floor) {
+      createFloor(
+        this.physics,
+        this.platforms,
+        this.levelData.floor,
+        this.levelData.worldWidth
+      );
+    }
 
     // Batman at spawn point
     this.batman = new Batman({
