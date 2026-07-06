@@ -44,12 +44,15 @@ The original implementation is preserved on the [`archive/original-impementation
 
 ### Commands
 
-| Command           | Description                                 |
-| ----------------- | ------------------------------------------- |
-| `npm install`     | Install project dependencies                |
-| `npm run dev`     | Start Vite dev server with HMR (port 10001) |
-| `npm run build`   | Production build (output to `dist/`)        |
-| `npm run preview` | Preview the production build                |
+| Command              | Description                                 |
+| -------------------- | ------------------------------------------- |
+| `npm install`        | Install project dependencies                |
+| `npm run dev`        | Start Vite dev server with HMR (port 10001) |
+| `npm run build`      | Production build (output to `dist/`)        |
+| `npm run preview`    | Preview the production build                |
+| `npm run typecheck`  | TypeScript type checking (`tsc --noEmit`)    |
+| `npm run lint`       | ESLint                                      |
+| `npm run test`       | Vitest unit tests                           |
 
 ## Architecture
 
@@ -86,8 +89,14 @@ src/
     levels/
       index.ts             # Level registry (LEVELS object + LEVEL_ORDER array)
       level-01.json        # Data-driven level definitions (×8 episodes)
-      ...
+      level-02.json
+      level-03.json
+      level-04.json
+      level-05.json
+      level-06.json
+      level-07.json
       level-08.json
+      levels.test.ts       # Level data validation tests
   entities/
     Batman.ts              # Player class: state machine, HP, punch hitbox, scoring
     Enemy.ts               # Base enemy class: patrol AI, attack, damage, death
@@ -100,14 +109,13 @@ src/
     GameMenu.ts            # Title screen with pan-down animation
     LevelSelect.ts         # Episode picker (8 areas, 2×4 grid)
     EpisodeIntro.ts        # Cinematic intro with typewriter narration
-    GameLevel.ts           # Generic gameplay scene (loads any level by ID)
+    GameLevel.ts           # Generic gameplay scene (accepts { levelId } init data)
     LevelComplete.ts       # Victory screen with score/rescue stats
     GameOver.ts            # Defeat screen with retry/level select
-    1-LevelOne/            # Legacy level scene (deprecated; kept for reference)
     index.ts               # Scene registry
   systems/
     AssetLoader.ts         # Centralized gameplay asset preloading
-    LevelLoader.ts         # Parse level JSON, create platforms + backgrounds
+    LevelLoader.ts         # Parse level JSON, create platforms + backgrounds + floor
     TilemapManager.ts      # Tiled JSON tilemap support (infrastructure ready)
     ParallaxBackground.ts  # Multi-layer parallax scrolling (5 layers, 8 themes)
   ui/
@@ -119,7 +127,7 @@ src/
 
 ### Key Systems
 
-- **Data-Driven Levels** — All level layouts, enemy/NPC spawns, backgrounds, and narration are defined in JSON files. Adding a new episode means adding a new JSON file and registering it.
+- **Data-Driven Levels** — All level layouts, enemy/NPC spawns, backgrounds, and narration are defined in JSON files. Optional `floor` field tiles a full-width ground via `createFloor()`. Adding a new episode means adding a new JSON file and registering it in `index.ts`.
 - **Parallax Backgrounds** — 5-layer scrolling with 8 city themes (day/night variants). Scroll factors range from 0 (fixed sky) to 0.8 (foreground).
 - **Combat** — Batman has a punch hitbox (40px range) that detects overlap with enemies. Enemies take damage, play hurt animations, and die after 3 hits.
 - **Enemy AI** — Enemies patrol between defined bounds. When Batman enters range, they switch to attack mode (melee or ranged). Ranged gangsters fire bullets with a 2.5s cooldown.
@@ -144,8 +152,10 @@ Assets live in `public/assets/` (copied to `dist/assets/` at build time).
 
 - All asset paths are defined in `src/constants/assets.ts` — never hardcode paths elsewhere
 - Physics constants live in `src/constants/physics.ts`
-- Level layouts are data-driven via JSON files in `src/data/levels/`
-- Enemy subclasses extend the base `Enemy` class and override `createSprite()` and animation keys
+- Level layouts are data-driven via JSON files in `src/data/levels/`; register new levels in `index.ts`
+- `LevelData` includes an optional `floor` field; `createFloor()` tiles it across `worldWidth`
+- `GameLevel` accepts `{ levelId: string }` in scene init data and loads the matching entry from `LEVELS`
+- Enemy subclasses extend `Enemy` and pass `EnemySpriteOptions` to `super(config, options)`
 
 ## Code Style
 
