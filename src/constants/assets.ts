@@ -147,16 +147,6 @@ export const Spritesheets = {
     path: `${GANGSTER}/Gangsters_1/Attack_1.png`,
     frameConfig: CHAR_FRAME,
   },
-  GANGSTER1_SHOT: {
-    key: 'gangster1-shot',
-    path: `${GANGSTER}/Gangsters_1/Shot.png`,
-    frameConfig: CHAR_FRAME,
-  },
-  GANGSTER1_RECHARGE: {
-    key: 'gangster1-recharge',
-    path: `${GANGSTER}/Gangsters_1/Recharge.png`,
-    frameConfig: CHAR_FRAME,
-  },
   GANGSTER1_HURT: {
     key: 'gangster1-hurt',
     path: `${GANGSTER}/Gangsters_1/Hurt.png`,
@@ -192,16 +182,6 @@ export const Spritesheets = {
   GANGSTER2_ATTACK1: {
     key: 'gangster2-attack',
     path: `${GANGSTER}/Gangsters_2/Attack_1.png`,
-    frameConfig: CHAR_FRAME,
-  },
-  GANGSTER2_ATTACK2: {
-    key: 'gangster2-attack2',
-    path: `${GANGSTER}/Gangsters_2/Attack_2.png`,
-    frameConfig: CHAR_FRAME,
-  },
-  GANGSTER2_ATTACK3: {
-    key: 'gangster2-attack3',
-    path: `${GANGSTER}/Gangsters_2/Attack_3.png`,
     frameConfig: CHAR_FRAME,
   },
   GANGSTER2_HURT: {
@@ -288,11 +268,6 @@ export const Spritesheets = {
     path: `${HOMELESS}/Homeless_1/Special.png`,
     frameConfig: CHAR_FRAME,
   },
-  HOMELESS1_HURT: {
-    key: 'homeless1-hurt',
-    path: `${HOMELESS}/Homeless_1/Hurt.png`,
-    frameConfig: CHAR_FRAME,
-  },
 
   // --- Homeless NPC 2 ---
   HOMELESS2_IDLE: {
@@ -373,6 +348,7 @@ export const getCityBackgroundPaths = (
 
 // ---------------------------------------------------------------------------
 // UI kit asset paths
+// TODO: UIAssets are not loaded anywhere yet — staged for the UI-kit integration.
 // ---------------------------------------------------------------------------
 export const UIAssets = {
   BAR_GREEN_BG: `${UI}/Bars/Green/x1/Asset 1 - Copy.png`,

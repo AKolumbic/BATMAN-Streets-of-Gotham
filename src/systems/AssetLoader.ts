@@ -1,5 +1,4 @@
 import { Images, Spritesheets, Audio } from '../constants/assets';
-import { loadCityTileAssets } from './TilemapManager';
 
 /**
  * Helper to load a spritesheet entry from the asset manifest.
@@ -13,7 +12,7 @@ function loadSheet(
 
 /**
  * Preloads all gameplay assets: backgrounds, platforms, character
- * spritesheets, city tiles, and audio. Call in a scene's preload().
+ * spritesheets, and audio. Call in a scene's preload().
  */
 export function loadGameplayAssets(load: Phaser.Loader.LoaderPlugin): void {
   // Background images (legacy level-01)
@@ -72,7 +71,6 @@ export function loadGameplayAssets(load: Phaser.Loader.LoaderPlugin): void {
   loadSheet(load, Spritesheets.HOMELESS1_WALK);
   loadSheet(load, Spritesheets.HOMELESS1_RUN);
   loadSheet(load, Spritesheets.HOMELESS1_SPECIAL);
-  loadSheet(load, Spritesheets.HOMELESS1_HURT);
   loadSheet(load, Spritesheets.HOMELESS2_IDLE);
   loadSheet(load, Spritesheets.HOMELESS2_WALK);
   loadSheet(load, Spritesheets.HOMELESS2_RUN);
@@ -80,9 +78,6 @@ export function loadGameplayAssets(load: Phaser.Loader.LoaderPlugin): void {
   loadSheet(load, Spritesheets.HOMELESS3_WALK);
   loadSheet(load, Spritesheets.HOMELESS3_RUN);
   loadSheet(load, Spritesheets.HOMELESS3_SPECIAL);
-
-  // City tile assets (for future tilemap-based levels)
-  loadCityTileAssets(load);
 
   // Audio
   load.audio(Audio.GAME_MUSIC.key, [...Audio.GAME_MUSIC.path]);
