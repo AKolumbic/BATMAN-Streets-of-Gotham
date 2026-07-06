@@ -19,8 +19,6 @@
   "music": "gameMusic",
   "player": { "x": 100, "y": 300 },
   "platforms": [
-    { "x": 400, "y": 600, "texture": "ground", "scale": 7, "label": "FLOOR" },
-
     { "x": 300, "y": 340, "texture": "platform", "scale": 0.65, "label": "OPENING" },
     { "x": 450, "y": 340, "texture": "platform", "scale": 0.65 },
     { "x": 600, "y": 300, "texture": "platform", "scale": 0.25 },
@@ -57,6 +55,7 @@
     { "x": 3250, "y": 200, "texture": "platform", "scale": 0.25 },
     { "x": 3300, "y": 200, "texture": "platform", "scale": 0.25 }
   ],
+  "floor": { "texture": "ground", "y": 600, "scale": 6 },
   "enemies": [
     { "type": "gangster-melee", "x": 600, "y": 300, "patrolLeftBound": 450, "patrolRightBound": 800 },
     { "type": "gangster-melee", "x": 1200, "y": 200, "patrolLeftBound": 1050, "patrolRightBound": 1400 },

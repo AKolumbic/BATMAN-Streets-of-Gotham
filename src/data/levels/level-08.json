@@ -20,8 +20,6 @@
   "music": "gameMusic",
   "player": { "x": 100, "y": 420 },
   "platforms": [
-    { "x": 700, "y": 600, "texture": "ground", "scale": 10, "label": "FLOOR" },
-
     { "x": 200, "y": 400, "texture": "platform", "scale": 0.65, "label": "ASYLUM GATE" },
     { "x": 350, "y": 400, "texture": "platform", "scale": 0.65 },
     { "x": 500, "y": 330, "texture": "platform", "scale": 0.25 },
@@ -80,6 +78,7 @@
     { "x": 4600, "y": 150, "texture": "platform", "scale": 0.25 },
     { "x": 4650, "y": 150, "texture": "platform", "scale": 0.25 }
   ],
+  "floor": { "texture": "ground", "y": 600, "scale": 6 },
   "enemies": [
     { "type": "gangster-melee", "x": 600, "y": 280, "patrolLeftBound": 450, "patrolRightBound": 800 },
     { "type": "gangster-melee", "x": 1050, "y": 180, "patrolLeftBound": 900, "patrolRightBound": 1150 },

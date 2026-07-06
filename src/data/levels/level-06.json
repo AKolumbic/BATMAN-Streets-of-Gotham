@@ -19,8 +19,6 @@
   "music": "gameMusic",
   "player": { "x": 100, "y": 370 },
   "platforms": [
-    { "x": 500, "y": 600, "texture": "ground", "scale": 8, "label": "FLOOR" },
-
     { "x": 200, "y": 370, "texture": "platform", "scale": 0.65, "label": "COURTHOUSE STEPS" },
     { "x": 350, "y": 300, "texture": "platform", "scale": 0.5 },
     { "x": 500, "y": 240, "texture": "platform", "scale": 0.25 },
@@ -65,6 +63,7 @@
     { "x": 3850, "y": 160, "texture": "platform", "scale": 0.25 },
     { "x": 3900, "y": 160, "texture": "platform", "scale": 0.25 }
   ],
+  "floor": { "texture": "ground", "y": 600, "scale": 6 },
   "enemies": [
     { "type": "gangster-melee", "x": 550, "y": 190, "patrolLeftBound": 400, "patrolRightBound": 700 },
     { "type": "gangster-melee", "x": 1050, "y": 300, "patrolLeftBound": 900, "patrolRightBound": 1200 },
