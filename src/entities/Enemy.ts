@@ -17,6 +17,24 @@ export interface EnemyConfig {
   patrolRightBound: number;
 }
 
+export interface EnemySpriteOptions {
+  textureKey: string;
+  walkAnimKey: string;
+  attackAnimKey: string;
+  scale: number;
+  bodySize: { width: number; height: number };
+  bodyOffset: { x: number; y: number };
+}
+
+const LEGACY_ENEMY_OPTIONS: EnemySpriteOptions = {
+  textureKey: 'enemy',
+  walkAnimKey: 'enemy-walk',
+  attackAnimKey: 'enemy-punch',
+  scale: ENEMY.SCALE,
+  bodySize: { width: 150, height: 200 },
+  bodyOffset: { x: 35, y: 20 },
+};
+
 /**
  * Base enemy class. Handles patrol, attack-range detection, damage,
  * hit stun, death, and score. Subclasses override animation keys
@@ -36,20 +54,23 @@ export default class Enemy {
   protected attackCooldown = false;
   protected hitStunned = false;
 
-  // Subclasses may override these for their own sprite sheets
-  protected walkAnimKey = 'enemy-walk';
-  protected attackAnimKey = 'enemy-punch';
+  protected walkAnimKey: string;
+  protected attackAnimKey: string;
 
-  constructor(config: EnemyConfig) {
+  constructor(
+    config: EnemyConfig,
+    options: EnemySpriteOptions = LEGACY_ENEMY_OPTIONS
+  ) {
     this.scene = config.scene;
     this.maxHp = ENEMY.MAX_HP;
     this.hp = this.maxHp;
     this.patrolLeftBound = config.patrolLeftBound;
     this.patrolRightBound = config.patrolRightBound;
     this.facingRight = true;
+    this.walkAnimKey = options.walkAnimKey;
+    this.attackAnimKey = options.attackAnimKey;
 
-    // Create physics sprite — subclasses call initSprite() after super()
-    this.sprite = this.createSprite(config);
+    this.sprite = this.createSprite(config, options);
 
     // Collide with platforms
     config.scene.physics.add.collider(this.sprite, config.platforms);
@@ -78,19 +99,16 @@ export default class Enemy {
     this.sprite.setVelocityX(speed);
   }
 
-  /**
-   * Create the physics sprite. Subclasses can override to use different
-   * textures and body sizes.
-   */
-  protected createSprite(
-    config: EnemyConfig
+  private createSprite(
+    config: EnemyConfig,
+    options: EnemySpriteOptions
   ): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody {
     const sprite = config.scene.physics.add
-      .sprite(config.x, config.y, 'enemy')
-      .setScale(ENEMY.SCALE) as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+      .sprite(config.x, config.y, options.textureKey)
+      .setScale(options.scale) as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
-    sprite.body.setSize(150, 200);
-    sprite.body.setOffset(35, 20);
+    sprite.body.setSize(options.bodySize.width, options.bodySize.height);
+    sprite.body.setOffset(options.bodyOffset.x, options.bodyOffset.y);
     sprite.setCollideWorldBounds(true);
     sprite.body.setGravityY(200);
 
