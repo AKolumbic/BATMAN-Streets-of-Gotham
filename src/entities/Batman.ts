@@ -1,4 +1,5 @@
 import { Animations, Geom } from 'phaser';
+import { BATMAN } from '../constants/physics';
 
 export enum BatmanState {
   IDLE = 'IDLE',
@@ -31,24 +32,17 @@ export default class Batman {
   private invulnerabilityTimer: Phaser.Time.TimerEvent | null = null;
   private flickerTimer: Phaser.Time.TimerEvent | null = null;
 
-  private static readonly MOVE_SPEED = 160;
-  private static readonly JUMP_VELOCITY = -400;
-  private static readonly EXTRA_GRAVITY = 200;
-  private static readonly INVULNERABILITY_MS = 1000;
-  private static readonly KNOCKBACK_X = 200;
-  private static readonly KNOCKBACK_Y = -150;
-
   constructor(config: BatmanConfig) {
     this.scene = config.scene;
-    this.maxHp = 5;
+    this.maxHp = BATMAN.MAX_HP;
     this.hp = this.maxHp;
 
     // Create physics sprite
     this.sprite = config.scene.physics.add
       .sprite(config.x, config.y, 'stand')
-      .setScale(1.15) as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+      .setScale(BATMAN.SCALE) as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     this.sprite.setCollideWorldBounds(true);
-    this.sprite.body.setGravityY(Batman.EXTRA_GRAVITY);
+    this.sprite.body.setGravityY(BATMAN.EXTRA_GRAVITY);
 
     // Collide with platforms
     config.scene.physics.add.collider(this.sprite, config.platforms);
@@ -111,18 +105,18 @@ export default class Batman {
     // Jump
     if (jumpDown && onGround) {
       this.state = BatmanState.JUMPING;
-      this.sprite.setVelocityY(Batman.JUMP_VELOCITY);
+      this.sprite.setVelocityY(BATMAN.JUMP_VELOCITY);
     }
 
     // Horizontal movement
     if (leftDown) {
-      this.sprite.setVelocityX(-Batman.MOVE_SPEED);
+      this.sprite.setVelocityX(-BATMAN.MOVE_SPEED);
       this.facingRight = false;
       if (onGround && this.state !== BatmanState.JUMPING) {
         this.state = BatmanState.RUNNING;
       }
     } else if (rightDown) {
-      this.sprite.setVelocityX(Batman.MOVE_SPEED);
+      this.sprite.setVelocityX(BATMAN.MOVE_SPEED);
       this.facingRight = true;
       if (onGround && this.state !== BatmanState.JUMPING) {
         this.state = BatmanState.RUNNING;
@@ -178,15 +172,15 @@ export default class Batman {
 
     // Knockback away from enemy
     const knockbackDir = this.sprite.x < enemyX ? -1 : 1;
-    this.sprite.setVelocityX(Batman.KNOCKBACK_X * knockbackDir);
-    this.sprite.setVelocityY(Batman.KNOCKBACK_Y);
+    this.sprite.setVelocityX(BATMAN.KNOCKBACK_X * knockbackDir);
+    this.sprite.setVelocityY(BATMAN.KNOCKBACK_Y);
     this.state = BatmanState.FALLING;
     this.prevState = BatmanState.FALLING;
 
     // Flicker effect during i-frames
     this.flickerTimer = this.scene.time.addEvent({
       delay: 80,
-      repeat: Math.floor(Batman.INVULNERABILITY_MS / 80),
+      repeat: Math.floor(BATMAN.INVULNERABILITY_MS / 80),
       callback: () => {
         this.sprite.setAlpha(this.sprite.alpha === 1 ? 0.3 : 1);
       },
@@ -194,7 +188,7 @@ export default class Batman {
 
     // End invulnerability
     this.invulnerabilityTimer = this.scene.time.delayedCall(
-      Batman.INVULNERABILITY_MS,
+      BATMAN.INVULNERABILITY_MS,
       () => {
         this.isInvulnerable = false;
         this.sprite.setAlpha(1);
