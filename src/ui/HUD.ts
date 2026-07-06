@@ -11,7 +11,7 @@ export default class HUD {
   private batman: Batman;
 
   // Health bar
-  private healthBarBg!: Phaser.GameObjects.Image;
+  private healthBarBg!: Phaser.GameObjects.Rectangle;
   private healthBarFill!: Phaser.GameObjects.Rectangle;
   private healthLabel!: Phaser.GameObjects.Text;
 
@@ -37,34 +37,17 @@ export default class HUD {
   }
 
   private createHealthBar(): void {
-    // Check if UI bar images are loaded; use them if available, else fallback
-    const hasBarBg = this.scene.textures.exists('ui-bar-bg');
-
-    if (hasBarBg) {
-      // Image-based health bar background
-      this.healthBarBg = this.scene.add
-        .image(HUD.BAR_X + 2, HUD.BAR_Y + 2, 'ui-bar-bg')
-        .setOrigin(0, 0)
-        .setDisplaySize(HUD.BAR_WIDTH + 8, HUD.BAR_HEIGHT + 8)
-        .setScrollFactor(0)
-        .setDepth(HUD.DEPTH);
-    } else {
-      // Fallback rectangle background
-      this.healthBarBg = this.scene.add
-        .image(0, 0, '__DEFAULT') // placeholder
-        .setVisible(false);
-
-      this.scene.add
-        .rectangle(
-          HUD.BAR_X + HUD.BAR_WIDTH / 2,
-          HUD.BAR_Y + HUD.BAR_HEIGHT / 2,
-          HUD.BAR_WIDTH,
-          HUD.BAR_HEIGHT,
-          0x333333
-        )
-        .setScrollFactor(0)
-        .setDepth(HUD.DEPTH);
-    }
+    // UI-kit image bars (UIAssets) are staged but not loaded yet — see assets.ts
+    this.healthBarBg = this.scene.add
+      .rectangle(
+        HUD.BAR_X + HUD.BAR_WIDTH / 2,
+        HUD.BAR_Y + HUD.BAR_HEIGHT / 2,
+        HUD.BAR_WIDTH,
+        HUD.BAR_HEIGHT,
+        0x333333
+      )
+      .setScrollFactor(0)
+      .setDepth(HUD.DEPTH);
 
     // HP label
     this.healthLabel = this.scene.add
