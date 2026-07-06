@@ -19,4 +19,4 @@ const config = {
   scene: scenes,
 } as Types.Core.GameConfig;
 
-const game = new Game(config);
+new Game(config);
