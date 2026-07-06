@@ -31,27 +31,22 @@ export default class GangsterRanged extends Enemy {
     if (this.sprite.active) {
       this.sprite.play(this.walkAnimKey, true);
     }
+  }
 
-    // Override attack-complete to include recharge
-    this.sprite.on(
-      Animations.Events.ANIMATION_COMPLETE,
-      (anim: Animations.Animation) => {
-        if (anim.key === this.attackAnimKey && this.isAlive) {
-          // Play recharge animation before returning to patrol
-          this.isRecharging = true;
-          this.sprite.play('gangster3-recharge-anim');
-        }
-        if (anim.key === 'gangster3-recharge-anim' && this.isAlive) {
-          this.isRecharging = false;
-          this.state = EnemyState.PATROL;
-          this.sprite.play(this.walkAnimKey, true);
-          const speed = this.facingRight
-            ? ENEMY.PATROL_SPEED
-            : -ENEMY.PATROL_SPEED;
-          this.sprite.setVelocityX(speed);
-        }
-      }
-    );
+  protected override onAnimationComplete(anim: Animations.Animation): void {
+    if (!this.isAlive) return;
+
+    if (anim.key === this.attackAnimKey) {
+      this.isRecharging = true;
+      this.sprite.setVelocityX(0);
+      this.sprite.play('gangster3-recharge-anim');
+      return;
+    }
+
+    if (anim.key === 'gangster3-recharge-anim') {
+      this.isRecharging = false;
+      this.resumePatrol();
+    }
   }
 
   protected override createSprite(

@@ -61,17 +61,21 @@ export default class Enemy {
     // Listen for attack animation completion
     this.sprite.on(
       Animations.Events.ANIMATION_COMPLETE,
-      (anim: Animations.Animation) => {
-        if (anim.key === this.attackAnimKey && this.isAlive) {
-          this.state = EnemyState.PATROL;
-          this.sprite.play(this.walkAnimKey, true);
-          const speed = this.facingRight
-            ? ENEMY.PATROL_SPEED
-            : -ENEMY.PATROL_SPEED;
-          this.sprite.setVelocityX(speed);
-        }
-      }
+      (anim: Animations.Animation) => this.onAnimationComplete(anim)
     );
+  }
+
+  protected onAnimationComplete(anim: Animations.Animation): void {
+    if (anim.key === this.attackAnimKey && this.isAlive) {
+      this.resumePatrol();
+    }
+  }
+
+  protected resumePatrol(): void {
+    this.state = EnemyState.PATROL;
+    this.sprite.play(this.walkAnimKey, true);
+    const speed = this.facingRight ? ENEMY.PATROL_SPEED : -ENEMY.PATROL_SPEED;
+    this.sprite.setVelocityX(speed);
   }
 
   /**
