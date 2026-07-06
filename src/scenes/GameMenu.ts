@@ -27,7 +27,8 @@ export default class GameMenu extends Scene {
     this.camera.setBounds(0, 0, 800, 1100);
 
     // Intro Music
-    const music = this.sound.add(Audio.INTRO_MUSIC.key);
+    const music =
+      this.sound.get(Audio.INTRO_MUSIC.key) ?? this.sound.add(Audio.INTRO_MUSIC.key);
     music.play({ volume: 0.5, loop: true });
 
     // Background Image

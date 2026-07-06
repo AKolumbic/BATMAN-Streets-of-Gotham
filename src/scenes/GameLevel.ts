@@ -67,8 +67,13 @@ export default class GameLevel extends Scene {
     this.parallax = null;
 
     // Music
-    this.gameMusic = this.sound.add(this.levelData.music);
+    this.gameMusic =
+      this.sound.get(this.levelData.music) ?? this.sound.add(this.levelData.music);
     this.gameMusic.play({ volume: 0.35, loop: true });
+
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.gameMusic.stop();
+    });
 
     // Background — legacy or parallax
     if (this.levelData.background.theme === 'legacy') {
