@@ -15,7 +15,7 @@ export default class GameMenu extends Scene {
   preload(): void {
     this.load.image(Images.MENU_IMAGE.key, Images.MENU_IMAGE.path);
     this.load.image(Images.PLAY_BTN_BG.key, Images.PLAY_BTN_BG.path);
-    this.load.audio(Audio.INTRO_MUSIC.key, Audio.INTRO_MUSIC.path);
+    this.load.audio(Audio.INTRO_MUSIC.key, [...Audio.INTRO_MUSIC.path]);
   }
 
   create(): void {

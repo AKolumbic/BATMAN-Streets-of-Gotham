@@ -85,5 +85,5 @@ export function loadGameplayAssets(load: Phaser.Loader.LoaderPlugin): void {
   loadCityTileAssets(load);
 
   // Audio
-  load.audio(Audio.GAME_MUSIC.key, Audio.GAME_MUSIC.path as unknown as string[]);
+  load.audio(Audio.GAME_MUSIC.key, [...Audio.GAME_MUSIC.path]);
 }
